@@ -13,50 +13,37 @@ import javax.persistence.Table;
 import com.dieselpoint.norm.Database;
 
  
-@Table(name = "productos")
+@Table(name = "producto")
 public class Producto extends ModeloGuardable{
-
+	public static String tableName="producto";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int idProducto;
-	
+	public int codProducto;
+	public static String idColumnName="codProducto";
 
-	public static String tableName="productos";
-	public static String idColumnName="idProducto";
 	
-	@Column(name="descripcion")
-	private String descripcion;
+	
+	
+	@Column(name="codCategoria")
+	public String codCategoria;
+	@Column(name="codEstadoProducto")
+	public String codEstadoProducto;
+	@Column(name="nombre")
+	public String nombre;
+	@Column(name="codigoLegible")
+	public String codigoLegible;
+	@Column(name="precioActual")
+	public String precioActual;
 	
 	
 	public Producto() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
-
-
-	public int getIdProducto() {
-		return idProducto;
-	}
-
-
-	public void setIdProducto(int idProducto) {
-		this.idProducto = idProducto;
-	}
-
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
  
-		// 
-	}
-	
-	public static Producto findOrFail(int id) throws Exception {
+	 
+	// ESTE CÓDIGO ES FIJO, SOLO SE CAMBIA EL NOMBRE DE LA CLASE EN 3 LUGARES
+	public static Producto findOrFail(String id) throws Exception {
 		Database db = new Database();
 		
 		List<Producto> resultados = 

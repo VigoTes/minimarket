@@ -77,6 +77,7 @@ public class ModeloGuardable {
 		return "";
 	}
 	
+	//retorna el valor de la pk
 	public int id() {
     
         try {
@@ -87,7 +88,7 @@ public class ModeloGuardable {
         				.toString());
         	
         	
-            return valorPK; // depend on your class instance or  field type.
+            return valorPK;  
             
         } catch (NoSuchFieldException e) {
         	System.out.println(e);
@@ -108,17 +109,18 @@ public class ModeloGuardable {
 	public void guardar() {
 		
 		Database db = new Database();
-		db.insert(this);
+		if(id()==0) { //no existe el registro, hay que crearlo con INSERT
+			Debug.print("INSERT");
+			db.insert(this);
+		}else { //ya existe el registro, lo actualizamos con UPDATE
+			Debug.print("UPDATE");
+			db.update(this);
+		}
+
 		db.close();
 	}
 	
-	public void actualizar() {
-
-		Database db = new Database();
-		db.update(this);
-		db.close();
-		
-	}
+	 
 	
 	public int eliminar() {
 		String nombrePK = idColumnName();

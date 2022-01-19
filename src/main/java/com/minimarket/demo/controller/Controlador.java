@@ -23,7 +23,6 @@ public class Controlador {
 	@GetMapping("/")
 	public String listar(Model model) {
 	 
-		
 		 
 		return "home";
 	}
@@ -48,18 +47,13 @@ public class Controlador {
 	@GetMapping("/getProducto")
 	public String getProducto(Model model,String id) throws Exception {
 		
+		 
 		
-		Producto prod = new Producto();
-		prod.setDescripcion("insertando");
-		prod.guardar();
-		
-		Producto prod5 = Producto.findOrFail(5);
+		Producto prod5 = Producto.findOrFail(id);
 		
 		model.addAttribute("var",id);
-		model.addAttribute("descripcion",prod5.getDescripcion());
-		
-//		prod5.eliminar();
-		
+		model.addAttribute("descripcion",prod5.descripcion);
+		 
 		
 		
 		return "prueba";
@@ -68,7 +62,7 @@ public class Controlador {
 	@GetMapping("/eliminarProducto")
 	public String eliminarProducto(Model model,String id) throws NumberFormatException, Exception {
 		
-		Producto prod5 = Producto.findOrFail(Integer.parseInt(id));
+		Producto prod5 = Producto.findOrFail(id);
 		
 		model.addAttribute("var","Se eliminó correctamente el Producto"+prod5.id());
 		
@@ -85,8 +79,13 @@ public class Controlador {
 
 
 	@GetMapping("/probandoCosas")
-	public String probandoCosas(Model model) {
-		 
+	public String probandoCosas(Model model) throws Exception {
+		
+		Producto p = Producto.findOrFail("138");
+		p.descripcion = "nueva desc";
+		p.guardar();
+		model.addAttribute("var2",p.id());
+		
 		return "prueba";
 	}
 
