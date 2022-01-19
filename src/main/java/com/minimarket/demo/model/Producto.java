@@ -16,10 +16,14 @@ import com.dieselpoint.norm.Database;
 @Table(name = "productos")
 public class Producto extends ModeloGuardable{
 
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int idProducto;
-	private static String idColumnName="idProducto";
+	public int idProducto;
+	
+
+	public static String tableName="productos";
+	public static String idColumnName="idProducto";
 	
 	@Column(name="descripcion")
 	private String descripcion;
@@ -52,13 +56,20 @@ public class Producto extends ModeloGuardable{
 		// 
 	}
 	
-	public static Producto findOrFail(int id) {
+	public static Producto findOrFail(int id) throws Exception {
 		Database db = new Database();
+		
 		List<Producto> resultados = 
 				db.where(idColumnName+"=?", id).results(Producto.class);
-		return resultados.get(0);
+		db.close();
+		if(resultados.size()==0) {
+			throw new Exception("No existe el objeto con "+idColumnName+"="+id);
+		}
 		
+		return resultados.get(0);	
 	}
+	
+	
 	
 	
 }
