@@ -26,15 +26,15 @@ public class Producto extends ModeloGuardable{
 	
 	
 	@Column(name="codCategoria")
-	public String codCategoria;
+	public int codCategoria;
 	@Column(name="codEstadoProducto")
-	public String codEstadoProducto;
+	public int codEstadoProducto;
 	@Column(name="nombre")
 	public String nombre;
 	@Column(name="codigoLegible")
 	public String codigoLegible;
 	@Column(name="precioActual")
-	public String precioActual;
+	public float precioActual; 
 	
 	
 	public Producto() {
@@ -57,6 +57,26 @@ public class Producto extends ModeloGuardable{
 	}
 	
 	
+    public Categoria gCategoria() throws Exception{
+    
+        return Categoria.findOrFail( " "+ this.codCategoria);
+    
+
+        
+    }
 	
-	
+	public String gColor(){
+
+        if(this.codEstadoProducto==2)
+            return "rojo";
+
+        return "";
+
+    }
+
+    public EstadoProducto gEstado() throws Exception{
+        return EstadoProducto.findOrFail( " "+ this.codEstadoProducto);
+    
+    }
+
 }

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      
+        <div class="content-wrapper">
+            <section class="content"> <!--contenido-->
+                <img style="width:100%; height:50%;" src="img/minimarketHome.png">
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+</body>
+</html>

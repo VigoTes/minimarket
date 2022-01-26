@@ -41,7 +41,11 @@ public class ModeloGuardable {
 	//ESTAS DOS FUNCIONES SON PARA LLAMAR A LOS ATRIBUTOS ESTÁTICOS DE LA CLASE HIJO
 	public String idColumnName() {
 		try {
+			
+			
 			return this.getClass().getField("idColumnName").get(null).toString();
+			
+			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

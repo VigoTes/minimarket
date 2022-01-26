@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      
+        <div class="content-wrapper">
+            <section class="content"> <!--contenido-->
+                <div >
+                    <p class="h1" style="text-align: center">REGISTRAR INGRESO</p>
+                </div>
+                
+                <form method = "POST" action ="" onsubmit="" id="frmingreso" name="frmingreso"  enctype="multipart/form-data" >           
+                    <div class="container">
+                        <div class="row">           
+                            <div class="col-md" ><!--COLUMNA IZQUIERDA 1-->
+                                <div class="container"><!--OTRO CONTENEDOR DENTRO DE LA CELDA-->
+                                    <div class="row">
+                                        <div  class="colLabel">
+                                                <label for="fecha">Fecha Ingreso:</label>
+                                        </div>
+                                        <div class="col">
+                                                    <div  style="width: 100px; " >
+                                                        <input type="text" style="margin:0px auth;" class="form-control" name="fechaIngreso" id="fechaIngreso" disabled 
+                                                            value="" >     
+                                                    </div>
+                                        </div>
+                                      
+                                        <div class="w-100"></div>
+
+                                        <div  class="colLabel">
+                                            <label for="fecha">Punto de venta:</label>
+                                        </div>
+                                        <div class="col">
+                                                    <div>
+                                                        <input type="text" style="margin:0px auth;" class="form-control" name="puntoVenta" id="puntoVenta" disabled 
+                                                            value="Minimarket Trujillo" >     
+                                                    </div>
+                                        </div>
+
+                                        <div class="w-100"></div>
+
+                                        <div  class="colLabel">
+                                            <label for="fecha">Responsable:</label>
+                                        </div>
+                                        <div class="col">
+                                            <select class="form-control"  id="ComboBoxResponsable" name="ComboBoxResponsable" >
+                                                <option value="-1">-- Seleccionar -- </option>
+                                                <option value="1" >
+                                                    Yolo
+                                                </option>                                 
+                                            </select>      
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                
+                            <div class="col-md"><!--COLUMNA DERECHA-->
+                                <div style="margin-bottom: 1%">
+                                    <label for="fecha">Comentario: <b id="contador" style="color: rgba(0, 0, 0, 0.548)"></b></label>
+                                    <textarea class="form-control" name="comentario" id="comentario" aria-label="With textarea"
+                                         rows="3"></textarea>
+                                </div>
+                                
+                                <div class="container"><!--OTRO CONTENEDOR DENTRO DE LA CELDA-->
+                                    <div class="row">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!--LISTADO DE DETALLES-->
+                    <div class="col-md-12 pt-3">     
+                        <div class="table-responsive">                           
+                            <table id="detalles" class="table table-striped table-bordered table-condensed table-hover" style='background-color:#FFFFFF;'> 
+                                <thead >
+                                    <th width="10%"><!--cantidad-->
+                                        <div >
+                                            <input type="number" min="0" class="form-control"   id="importe">     
+                                        </div>
+                                    </th>
+                                    <th width="25%"><!--producto-->
+                                        <div>
+                                            <select class="form-control"  id="ComboBoxCDP" name="ComboBoxCDP" >
+                                                <option value="-1">Seleccionar</option>
+                                                    <option value="1" >
+                                                        Producto01
+                                                    </option>                                 
+                                            </select>        
+                                        </div> 
+                                    </th>  
+                                    <th width="25%"><!--proveedor-->
+                                        <div>
+                                            <select class="form-control"  id="ComboBoxCDP" name="ComboBoxCDP" >
+                                                <option value="-1">Seleccionar</option>
+                                                    <option value="1" >
+                                                        Producto01
+                                                    </option>                                 
+                                            </select>        
+                                        </div> 
+                                    </th> 
+                                    <th class="text-center"><!--fecha vencimiento-->
+                                        <div class="input-group date form_date " data-date-format="dd/mm/yyyy" data-provide="datepicker">
+                                            <input type="text" class="form-control" name="fechaVencimiento" id="fechaVencimiento"
+                                                    value="" style="text-align: center;font-size: 12pt;"> 
+                                            
+                                            <div class="input-group-btn">                                        
+                                                <button class="btn btn-primary date-set btn-sm" type="button" style="display: none">
+                                                    <i class="fas fa-calendar fa-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </th>                               
+                                    <th width="10%"><!--costo-->
+                                        <div >
+                                            <input type="number" min="0" class="form-control"   id="costo">     
+                                        </div>
+                                    </th>
+                                    <th width="10%" class="text-center">
+                                        <div>
+                                            <button type="button" id="btnadddet"  
+                                                class="btn btn-success" onclick="agregarDetalle()" >
+                                                <i class="fas fa-plus"></i>
+                                                    Agregar
+                                            </button>
+                                        </div>      
+                                    </th>                                            
+                                    
+                                </thead>
+                                
+                                
+                                <thead class="thead-default" style="background-color:#3c8dbc;color: #fff;">
+                                    <th  class="text-center">Cantidad</th>                                        
+                                    <th  class="text-center">Producto</th>                                 
+                                    <th  class="text-center">Proveedor</th>
+                                    <th  class="text-center">Fecha Vencimiento</th>
+                                    <th  class="text-center">Costo</th>                                            
+                                    <th  class="text-center">Opciones</th> 
+                                </thead>
+                                <tfoot>
+                
+                                                                                                    
+                                </tfoot>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div> 
+                        
+                
+                        <div class="row" id="divTotal">                       
+                            <div class="col-md-8">
+                            </div>   
+                            <div class="col-md-2">                        
+                                <label for="">Total : </label>    
+                            </div>   
+                            <div class="col-md-2">
+                                <!--HIDDEN PARA GUARDAR LA CANT DE ELEMENTOS DE LA TABLA-->
+                                <input type="hidden" name="cantElementos" id="cantElementos">                              
+                                <input type="hidden" class="form-control text-right" name="total" id="total" readonly>   
+                                <input type="text" class="form-control text-right" name="totalMostrado" id="totalMostrado" readonly>   
+                                                            
+                            </div>   
+                        </div>  
+                    </div> 
+                        
+                    <br>
+
+                    <div class="row">
+                
+                        <div class="col">
+                            
+                            <a th:href="@{/listarIngresos}" class='btn btn-info'>
+                                <i class="fas fa-arrow-left"></i> 
+                                Regresar al Menu
+                            </a>  
+                
+                        </div>
+                
+                        <div class="col"></div>
+
+                        <div class="col" id="divEnteroArchivo">            
+  
+                        </div>    
+                
+                        <div class="col text-center">  
+                            <div id="guardar">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-primary" id="btnRegistrar" name="btnRegistrar"
+                                        data-loading-text="<i class='fa a-spinner fa-spin'></i> Registrando" 
+                                            onclick="registrar()">
+                                        
+                                        <i class='fas fa-save'></i> 
+                                        Registrar
+                                    </button>          
+                                </div>    
+                            </div>
+                        </div>
+                   
+                        
+                    </div>
+                </form>
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <style th:replace="Layout/EstilosPegados :: estilosPegados"></style>
+    <script th:replace="Layout/ValidatorJS :: validatorJS"></script>
+
+    <script>
+        var f = new Date();
+        document.getElementById("fechaIngreso").value = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+    </script>
+    <script type="application/javascript">
+        //se ejecuta cada vez que escogewmos un file
+    
+            var cont=0;
+            var total=0;
+            var detalleRepo=[];
+            
+            $(document).ready(function(){
+                contadorCaracteres('comentario','contador','200');
+            });
+    
+            var listaArchivos = '';
+            function registrar(){
+                msje = validarFormularioCrear();
+                if(msje!="")
+                    {
+                        alerta(msje);
+                        return false;
+                    }
+                
+                //confirmar('¿Está seguro de registrar el ingreso?','info','frmingreso');
+                
+            }
+    
+            function validarFormularioCrear(){
+                msj='';
+                limpiarEstilos(['ComboBoxResponsable','comentario']);
+    
+                msj = validarSelect(msj,'ComboBoxResponsable',-1,'Responsable');
+    
+                msj = validarTamañoMaximoYNulidad(msj,'comentario',200,'Comentario');
+    
+                msj = validarCantidadMaximaYNulidadDetalles(msj,'cantElementos',10);
+
+                
+                return msj;
+            }
+        
+        </script>
+</body>
+</html>

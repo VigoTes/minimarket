@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                
+                
+                <div th:replace="Layout/Mensaje"></div>
+	            
+                <div class="row m-1">
+
+
+                    <a class="btn btn-primary" href="/Productos/Crear">
+                        <i class="fas fa-plus"></i>
+                        Nuevo Producto
+                    </a>
+                    
+                </div>
+
+                <table class="m-3 table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Código
+                            </th>
+                            <th>
+                                Nombre
+                            </th>
+                            <th>
+                                Categoría
+                            </th>
+                            <th>
+                                Precio
+                            </th>
+                            <th>
+                                Estado
+                            </th>
+                            <th>
+                                Opciones
+                            </th>
+
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr th:each="producto : ${listaProductos}"  th:class="${producto.gColor()}" >
+                            <td  th:text="${producto.codigoLegible}">
+                             
+                            </td>
+                            <td th:text="${producto.nombre}">
+                             
+                            </td>
+                            <td th:text="${producto.gCategoria().nombre}">
+                             
+                            </td>
+                            
+                            <td th:text="${producto.precioActual}">
+                             
+                            </td>
+                            <td th:text="${producto.gEstado().nombre}">
+                             
+                            </td>
+                            
+                          
+                            <td>
+                                 
+                                <a class="btn btn-info btn-xs" th:href="@{'/Productos/Editar/' + ${producto.codProducto}}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                               
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                    
+                </table>
+                
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <style>
+        .rojo{
+            background-color: rgba(211, 136, 136, 0.445);
+        }
+
+    </style>
+</body>
+</html>
