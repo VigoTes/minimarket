@@ -79,4 +79,9 @@ public class Producto extends ModeloGuardable{
     
     }
 
+    
+    public String toString() {
+    	
+    	return "a";
+    }
 }

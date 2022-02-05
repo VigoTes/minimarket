@@ -1,0 +1,20 @@
+COSAS TÉCNICAS QUE AUN NO SÉ COMO HACER:
+    ☐ Pasar array a un controller y recorrerlo
+
+
+
+CONFIG DEL PROYECTO:
+    ☐ Linkear clases con tablas
+
+
+CRUDS Básicos:
+    ☐ Producto
+    ☐ Categoría de producto
+    ☐ Proveedor
+    ☐ Punto Venta
+
+CRUDs Achorados:
+    ☐ VENTA (con detalles)
+    ☐ Ingreso de productos (Lotes)
+    ☐ Personal
+    

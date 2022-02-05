@@ -13,9 +13,9 @@ import javax.persistence.Table;
 import com.dieselpoint.norm.Database;
 
  
-@Table(name = "cliente")
-public class Cliente extends ModeloGuardable{
-	public static String tableName="cliente";
+@Table(name = "parametros")
+public class Parametro extends ModeloGuardable{
+	public static String tableName="parametros";
 	
 	@Id
 	public String dni;
@@ -29,17 +29,17 @@ public class Cliente extends ModeloGuardable{
 	public String apellidos;
 	
 	
-	public Cliente() {
+	public Parametro() {
 		super();
 	}
  
 	 
 	// ESTE CÓDIGO ES FIJO, SOLO SE CAMBIA EL NOMBRE DE LA CLASE EN 3 LUGARES
-	public static Cliente findOrFail(String id) throws Exception {
+	public static Parametro findOrFail(String id) throws Exception {
 		Database db = new Database();
 		
-		List<Cliente> resultados = 
-				db.where(idColumnName+"=?", id).results(Cliente.class);
+		List<Parametro> resultados = 
+				db.where(idColumnName+"=?", id).results(Parametro.class);
 		db.close();
 		if(resultados.size()==0) {
 			throw new Exception("No existe el objeto con "+idColumnName+"="+id);
@@ -47,13 +47,7 @@ public class Cliente extends ModeloGuardable{
 		
 		return resultados.get(0);	
 	}
-    
-
-    public String gNombreCompleto(){
-
-        return this.apellidos  +" " + this.nombre ;
-    }
-	
+ 
 	
 	
 }
