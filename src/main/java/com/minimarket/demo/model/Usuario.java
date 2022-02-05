@@ -51,6 +51,16 @@ public class Usuario extends ModeloGuardable{
     
 
 	
+    public Personal gPersonal(){
+        Database db = new Database();
+		
+        List<Personal> resultados = db.where("codUsuario=?", this.codUsuario).results(Personal.class);
+        
+        db.close();
+        return resultados.get(0);
+        
+    }
+ 
 	
 	
 }

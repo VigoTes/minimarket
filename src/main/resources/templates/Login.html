@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+	 <meta charset="utf-8"/>
+     <title>CEDEPAS Norte | Login</title>
+	 <link rel="shortcut icon" href="/img/LogoCedepas.png" type="image/png">
+  
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <meta content="width=device-width, initial-scale=1.0" name="viewport"/>      
+     <link rel="stylesheet" href="/adminlte/plugins/fontawesome-free/css/all.min.css">
+     <link rel="stylesheet" href="/adminlte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css">
+     <link rel="stylesheet" href="/adminlte/dist/css/adminlte.min.css">
+     <link rel="stylesheet" href="/stylebonis.css">
+     <link rel="stylesheet" href="css/login.css">
+     <link rel="stylesheet" href="css/style.css">
+     <link  rel="stylesheet" href="/uicons-regular-rounded/css/uicons-regular-rounded.css">
+      
+</head>
+<div class="conteiner">
+
+	
+	
+    <br>
+<div class="login-wrap">
+	
+
+	<form  method="POST" th:action="@{/logearse}">
+        
+        
+
+ 
+
+		<div class="login-html">
+                
+          
+
+			<input id="tab-1" type="radio" name="tab" class="sign-in" checked>
+				<label for="tab-1" class="tab" style="font-size: xx-large">Iniciar Sesión</label>
+
+
+			<input id="tab-2" type="radio" name="tab" class="sign-up">
+				<label for="tab-2" class="tab"> </label>
+
+
+			<div class="login-form">
+				<div class="sign-in-htm">
+					<div class="group">
+						<label for="user" class="label" style="font-size: medium">Usuario</label>
+						<input type="text" class="input" placeholder="Ingrese usuario" 
+							id="usuario" name="usuario" value="">
+						
+						 
+					</div>
+					<div class="group">
+						<label for="pass" class="label" style="font-size: medium">Contraseña</label>
+						<input placeholder="Ingrese contraseña"  id="password" name="password"
+							type="password" class="input" data-type="password">
+						 
+					</div>
+				
+					<div class="group">
+						<input id="ingresar" name="ingresar" type="submit" class="button" value="Ingresar">
+					</div>
+
+                    <!-- MENSAJE DE ERROR DE LLEGADA  -->
+                    <div th:if="${msj}!=null" class ="m-3" role ="alert">
+                        <span th:text="${msj}">
+        
+                        </span>
+                        <!-- 
+                        <button type = "button" class ="close" data-dismiss="alert" aria-label="close">
+                            <span aria-hidden="true"> &times;</span>
+                        </button>
+                         -->
+                    </div>
+
+					<div class="hr"></div>
+				 
+
+					
+				</div>
+
+				 
+			</div>
+
+			<div style="text-align: center">
+
+				<img src="/img/LogoCedepas.png"
+				width="200" height="140" >
+
+			</div>
+		</div>
+		
+	</form>
+
+
+</div>
+</div>
+</html>

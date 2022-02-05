@@ -1,11 +1,11 @@
 COSAS TÉCNICAS QUE AUN NO SÉ COMO HACER:
     ✔ Pasar array JSON a un controller y recorrerlo @done(04-02-22 21:42)
-    ☐ Obtener empleado logeado
-    ☐ HACER EL LOGIN XD
-    
+    ✔ Obtener empleado logeado @done(05-02-22 17:38)
+    ✔ HACER EL LOGIN XD @done(05-02-22 17:38)
+    ☐ Imprimir en una vista el emp logeado
 
 CONFIG DEL PROYECTO:
-    ☐ Linkear clases con tablas
+    ✔ Linkear clases con tablas @done(05-02-22 17:38)
 
 
 CRUDS Básicos:

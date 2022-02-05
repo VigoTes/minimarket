@@ -10,11 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.minimarket.demo.entity.UserDetailsServiceImpl;
 
- 
 @Configuration
-@EnableWebSecurity
+ 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     //Necesario para evitar que la seguridad se aplique a los resources
@@ -31,18 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 	        .antMatchers(resources).permitAll()  
 	        .antMatchers("/","/index").permitAll()
                 //.anyRequest().authenticated()
-                .and()
-            .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/menu")
-                .failureUrl("/login?error=true")
-                .usernameParameter("username")
-                .passwordParameter("password")
-                .and()
-            .logout()
-                .permitAll()
-                .logoutSuccessUrl("/login?logout");
+                ;
     }
     
     
@@ -54,17 +41,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 		bCryptPasswordEncoder = new BCryptPasswordEncoder(4); //4 =  nivel de encript (1-31)
         return bCryptPasswordEncoder;
     }
-	
-    @Autowired
-    UserDetailsServiceImpl userDetailsService;
-	
-    //Registra el service para usuarios y el encriptador de contrasena
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception { 
- 
-        // Setting Service to find User in the database.
-        // And Setting PassswordEncoder
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());     
-    }
+	 
     
 }

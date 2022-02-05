@@ -12,6 +12,8 @@ import javax.persistence.Table;
 
 import com.dieselpoint.norm.Database;
 
+import com.minimarket.demo.model.PuntoVenta;
+import com.minimarket.demo.model.TipoPersonal;
  
 @Table(name = "personal")
 public class Personal extends ModeloGuardable{
@@ -54,6 +56,31 @@ public class Personal extends ModeloGuardable{
 		
 		return resultados.get(0);	
 	}
+
+	public static List<Personal> obtenerPersonalPorTipo(String tipo) throws Exception{// Administrador-Cajero-Supervisor
+		Database db = new Database();
+		List<TipoPersonal> tiposPersonal = db.where("nombre=?",tipo).results(TipoPersonal.class);
+		List<Personal> resultados = db.where("codTipoPersonal=?", tiposPersonal.get(0).codTipoPersonal).results(Personal.class);
+		db.close();
+		if(resultados.size()==0) {
+			throw new Exception("No existe personal de tipo "+tipo);
+		}
+		
+		return resultados;
+	}
+
+	public PuntoVenta obtenerPuntoVenta() throws Exception {
+		Database db = new Database();
+		List<PuntoVenta> puntosVenta = db.where("codPersonalCajero=?",this.codPersonal).results(PuntoVenta.class);
+		db.close();
+
+		if(puntosVenta.size()==0) {
+			throw new Exception("No ningun punto de venta con el personal "+this.codPersonal);
+		}
+		return puntosVenta.get(0);
+	}
+
+
     
 
     
