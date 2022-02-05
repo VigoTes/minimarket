@@ -3,6 +3,8 @@ package librerias;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.minimarket.demo.model.Personal;
+
 public class ManejadorSesion {
 
 	
@@ -22,6 +24,12 @@ public class ManejadorSesion {
 		return msj;
 		
 	}
+
+    public static Personal getLogeado(HttpSession session) throws Exception{
+        String codPersonal = (String) session.getAttribute("codPersonalLogeado");
+        return Personal.findOrFail(codPersonal);
+
+    }
 
 
 	

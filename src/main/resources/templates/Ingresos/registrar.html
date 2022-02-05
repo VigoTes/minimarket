@@ -49,11 +49,11 @@ xmlns:th="http://www.thymeleaf.org"
                                             <label for="fecha">Responsable:</label>
                                         </div>
                                         <div class="col">
-                                            <select class="form-control"  id="ComboBoxResponsable" name="ComboBoxResponsable" >
-                                                <option value="-1">-- Seleccionar -- </option>
-                                                <option value="1" >
-                                                    Yolo
-                                                </option>                                 
+                                            
+                                            <select class="form-control " name="codResponsable" id="codResponsable" >
+                                                <option value="-1">- Responsable -</option>
+                                                <option  th:each="personal : ${listaPersonal}" th:value="${personal.codPersonal}" th:text="${personal.nombres}">
+                                                </option>
                                             </select>      
                                         </div>
                                     </div>
@@ -89,21 +89,21 @@ xmlns:th="http://www.thymeleaf.org"
                                     </th>
                                     <th width="25%"><!--producto-->
                                         <div>
-                                            <select class="form-control"  id="ComboBoxCDP" name="ComboBoxCDP" >
-                                                <option value="-1">Seleccionar</option>
-                                                    <option value="1" >
-                                                        Producto01
-                                                    </option>                                 
-                                            </select>        
+                                            
+                                            <select class="form-control " onchange="cambioProducto()" name="codProducto" id="codProducto" >
+                                                <option value="-1">- Producto -</option>
+                                                <option  th:each="producto : ${listaProductos}" th:value="${producto.codProducto}" th:text="${producto.nombre}">
+                                                </option>
+                                            </select>      
                                         </div> 
                                     </th>  
                                     <th width="25%"><!--proveedor-->
                                         <div>
-                                            <select class="form-control"  id="ComboBoxCDP" name="ComboBoxCDP" >
-                                                <option value="-1">Seleccionar</option>
-                                                    <option value="1" >
-                                                        Producto01
-                                                    </option>                                 
+                                            
+                                            <select class="form-control " onchange="cambioProveedor()" name="codProveedor" id="codProveedor" >
+                                                <option value="-1">- Proveedor -</option>
+                                                <option  th:each="proveedor : ${listaProveedores}" th:value="${proveedor.codProveedor}" th:text="${proveedor.nombre}">
+                                                </option>
                                             </select>        
                                         </div> 
                                     </th> 
@@ -195,7 +195,7 @@ xmlns:th="http://www.thymeleaf.org"
                             <div id="guardar">
                                 <div class="form-group">
                                     <button type="button" class="btn btn-primary" id="btnRegistrar" name="btnRegistrar"
-                                        data-loading-text="<i class='fa a-spinner fa-spin'></i> Registrando" 
+                                       
                                             onclick="registrar()">
                                         
                                         <i class='fas fa-save'></i> 
@@ -248,9 +248,9 @@ xmlns:th="http://www.thymeleaf.org"
     
             function validarFormularioCrear(){
                 msj='';
-                limpiarEstilos(['ComboBoxResponsable','comentario']);
+                limpiarEstilos(['codResponsable','comentario']);
     
-                msj = validarSelect(msj,'ComboBoxResponsable',-1,'Responsable');
+                msj = validarSelect(msj,'codResponsable',-1,'Responsable');
     
                 msj = validarTamañoMaximoYNulidad(msj,'comentario',200,'Comentario');
     
@@ -260,6 +260,7 @@ xmlns:th="http://www.thymeleaf.org"
                 return msj;
             }
         
-        </script>
+    </script>
+    <script th:replace="mantenerDetalles :: mantenerDetalles"></script>
 </body>
 </html>

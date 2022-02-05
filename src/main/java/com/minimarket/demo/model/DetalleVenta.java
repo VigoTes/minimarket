@@ -23,7 +23,7 @@ public class DetalleVenta extends ModeloGuardable{
 	public static String idColumnName="codDetalleVenta";
 
 	
-	
+ 
 	
 	@Column(name="codVenta")
 	public int codVenta;

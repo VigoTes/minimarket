@@ -1,6 +1,7 @@
 package com.minimarket.demo.controller;
 
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,9 +56,8 @@ public class VentaController {
 		db.close();
 		
 		
-		 
+		
 		model.addAttribute("msj",ManejadorSesion.getMsj(session));
-        
 		return "Ventas/ListarVentas";
 	}
 
@@ -79,37 +79,66 @@ public class VentaController {
 	}
 
 
-/* 
+
 	 
     // ME QUEDÉ AQUI TRATANDO DE ITERAR ESTE OBJETO JSON 
 	@GetMapping("/Guardar")
 	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request
-		,String json_detalles,  String dni) {
+		                        ,String json_detalles,  String dni) throws Exception {
+                                    
 		
-            JSONObject object = new JSONObject ();
-            JSONArray keys = object.names ();
-
-            for (int i = 0; i < keys.length (); i++) {
+            Debug.print(json_detalles);
+            
+            JSONArray array = new JSONArray(json_detalles);
+        
+            Venta venta = new Venta();
+            venta.codPunto = 1;
+            venta.codPersonal = 1;
+            venta.importeBruto = 0;
+            venta.importeTotal = 0;
+            venta.igv = 0;
+            venta.dni = dni;
+            venta.fechaHora = LocalDateTime.now();
+            venta.codigoLegible = "V2521";
+            venta.guardar();
+            
+            float total = 0;
+            int codProducto;
+            int cantidad ;
+            for (int i = 0; i < array.length (); i++) {
 	            
-	            String key = keys.getString (i); // Here's your key
-	            String value = object.getString (key); // Here's your value
-	            
-	            
+            	 JSONObject jsonObj = array.getJSONObject(i);
+            	 Debug.print(jsonObj.toString());
+            	 
+            	 codProducto = (int) jsonObj.get("producto_codigo");
+           
+            	 cantidad = Integer.valueOf(jsonObj.get("cantidad").toString());
+            	 
+            	 Producto producto = Producto.findOrFail(String.valueOf(codProducto));
+            	 
+            	 DetalleVenta detalle = new DetalleVenta();
+            	 detalle.codVenta = venta.codVenta;
+            	 detalle.codProducto = codProducto;
+            	 detalle.cantidad = cantidad;
+            	 
+            	 detalle.precioUnitario = producto.precioActual;
+            	 detalle.total = producto.precioActual * cantidad;
+            	 detalle.guardar();
+                 
+            	 total += detalle.total;
             }
+            
+            venta.importeTotal = total;
+            venta.igv = (float) (total / 1.18);
+            venta.importeBruto = venta.importeTotal - venta.importeBruto;
+            venta.guardar();
+           
 
-            Producto x = new Producto();
-            x.codCategoria = codCategoria;
-            x.codEstadoProducto = 1;
-            x.nombre = nombre;
-            x.codigoLegible = codigoLegible;
-            x.precioActual = precioActual;
-            x.guardar();
-
-            ManejadorSesion.addMsj(request, "Se ha creado el producto '" + x.nombre  + "'.");
-            return new ModelAndView ("redirect:/Productos/Listar", model);
+            ManejadorSesion.addMsj(request, "Venta registrada exitosamente.");
+            return new ModelAndView ("redirect:/Ventas/Listar", model);
 	}
 
- */
 
+    
     
 }

@@ -51,8 +51,9 @@ public class Venta extends ModeloGuardable{
 
 	
     @Column(name="fechaHora")
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIME)
     public LocalDateTime fechaHora;
+     
 
 	@Column(name="codigoLegible")
 	public String codigoLegible; 

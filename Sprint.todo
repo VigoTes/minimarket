@@ -1,7 +1,8 @@
 COSAS TÉCNICAS QUE AUN NO SÉ COMO HACER:
-    ☐ Pasar array a un controller y recorrerlo
-
-
+    ✔ Pasar array JSON a un controller y recorrerlo @done(04-02-22 21:42)
+    ☐ Obtener empleado logeado
+    ☐ HACER EL LOGIN XD
+    
 
 CONFIG DEL PROYECTO:
     ☐ Linkear clases con tablas
