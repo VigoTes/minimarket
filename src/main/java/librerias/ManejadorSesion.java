@@ -28,7 +28,7 @@ public class ManejadorSesion {
 
     public static Personal getPersonalLogeado(HttpSession session) throws Exception{
         
-        String codUsuario = (String) session.getAttribute("codUsuario");
+        String codUsuario = String.valueOf(session.getAttribute("codUsuario"));
         Usuario user = Usuario.findOrFail(codUsuario);
         
         return  user.gPersonal();

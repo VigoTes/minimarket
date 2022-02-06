@@ -128,12 +128,11 @@ public class AuthController {
     
 
     @GetMapping("/probandoCosas")
-    public String probandoCosas(Model model, HttpSession session) {
+    public String probandoCosas(Model model, HttpSession session) throws Exception{
         
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
-        String contraseñaEncriptada = bCryptPasswordEncoder.encode("123a4");
-        model.addAttribute("var",contraseñaEncriptada);
-        
+        IngresoAlmacen i = IngresoAlmacen.findOrFail("17");
+
+        model.addAttribute("var",i.listaStringLotes());
 
         return "prueba";
     }

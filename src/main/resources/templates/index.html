@@ -148,7 +148,8 @@ xmlns:th="http://www.thymeleaf.org"
         
       </ul>
   
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav ml-auto"> 
+            <li th:replace="Layout/MenuCuenta :: menuCuenta"></li>
 
       </ul>
 
@@ -175,8 +176,16 @@ xmlns:th="http://www.thymeleaf.org"
             <img src="/img/usuario.png" class="img-circle elevation-2" alt="User Image">
           </div>
               <div class="info">
-                <a href="" class="d-block">Vigo Briones</a>
-               
+                <a href="" class="d-block">
+                    
+                    <span th:text="${personalLogeado.gNombreCompleto()}"
+                     
+                  
+                     >
+
+                    </span>
+                </a>
+                
                   <label for="" style="color: rgb(255, 255, 255)">
                     Administrador
                   </label>
@@ -188,68 +197,9 @@ xmlns:th="http://www.thymeleaf.org"
         
   <!-- Sidebar Menu -->
         <nav class="mt-2">
-          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
-            role="menu" data-accordion="false">
-
-            <li class="nav-item">
-              <a href="/Ventas/Listar" class="nav-link">
-                <i class="far fa-building nav-icon"></i>
-                <p>
-                  Ventas
-                </p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="/IngresoAlmacen/Listar" class="nav-link">
-                <i class="far fa-building nav-icon"></i>
-                <p>
-                  Almacen
-                </p>
-              </a>
-            </li>
-
-            <li class="nav-item has-treeview">
-              <a href="#" class="nav-link">
-                <i class="far fa-building nav-icon"></i>
-                <p>
-                  Mantenedores
-                  <i class="right fas fa-angle-left"></i>
-                </p>
-              </a>
-              <ul class="nav nav-treeview">
-                <li class="nav-item">
-                  <a href="" class="nav-link">
-                    <i class="far fa-address-card nav-icon"></i>
-                    <p>Empleado</p>
-                  </a>
-                </li>
-            
-            
-                <li class="nav-item">
-                  <a th:href="@{/Productos/Listar}" class="nav-link">
-                    <i class="far fa-address-card nav-icon"></i>
-                    <p>Producto</p>
-                  </a>
-                </li>
-            
-  
-                <li class="nav-item">
-                  <a href="" class="nav-link">
-                    <i class="far fa-address-card nav-icon"></i>
-                    <p>Categoria</p>
-                  </a>
-                </li>
-  
-              
-                <li class="nav-item">
-                  <a href="" class="nav-link">
-                    <i class="far fa-address-card nav-icon"></i>
-                    <p>Punto de venta</p>
-                  </a>
-                </li>
-              </ul>
-            </li>
+          <ul th:replace="Layout/MenusLaterales/Personal :: personal" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
+            role="menu" data-accordion="false" >
+ 
   
           </ul>
         </nav>
@@ -482,7 +432,7 @@ xmlns:th="http://www.thymeleaf.org"
               },
               function(value){//se ejecuta cuando damos a aceptar
                   if(value)
-                    location.href = "{{route('user.cerrarSesion')}}"
+                    location.href = "/cerrarSesion"
               }
           );
     
