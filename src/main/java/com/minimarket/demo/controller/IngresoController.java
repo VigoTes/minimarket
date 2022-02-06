@@ -3,6 +3,7 @@ package com.minimarket.demo.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.dieselpoint.norm.Database;
@@ -36,6 +37,7 @@ import org.springframework.ui.ModelMap;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import java.text.SimpleDateFormat;  
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -46,7 +48,7 @@ public class IngresoController {
 	
 	
 	
-
+    
 	@GetMapping("/Listar")
 	public String listarIngresos(Model model, HttpSession session) {
 		
@@ -70,7 +72,7 @@ public class IngresoController {
 		//List<Personal> listaPersonal = db.results(Personal.class);
 		db.close();
 
-		PuntoVenta puntoVenta = Personal.findOrFail("2").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
+		PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
 
 		model.addAttribute("listaProductos",listaProductos);
 		model.addAttribute("listaProveedores",listaProveedores);
@@ -115,7 +117,7 @@ public class IngresoController {
 				JSONObject productoObj = new JSONObject(jsonObj.get("producto").toString());
 				JSONObject proveedorObj = new JSONObject(jsonObj.get("proveedor").toString());
 				//fechaVencimiento = LocalDate.parse(jsonObj.get("fechaVencimiento").toString()+" 00:00", formatoObtenerFecha);
-				fechaVencimiento = new Date();
+				fechaVencimiento = new SimpleDateFormat("dd/MM/yyyy").parse(jsonObj.get("fechaVencimiento").toString());
 				costo = Float.valueOf(jsonObj.get("costo").toString());
 				
 				Lote lote = new Lote();
@@ -150,5 +152,28 @@ public class IngresoController {
             return new ModelAndView ("redirect:/IngresoAlmacen/Listar", model);
 	}
 	
+	@GetMapping("/Editar/{codIngresoAlmacen}")
+	public String editarIngreso(Model model, HttpSession sessionl, @PathVariable("codIngresoAlmacen") String codIngresoAlmacen) throws Exception {
+		
+		Database db = new Database();
+		List<Producto> listaProductos = db.results(Producto.class);
+		List<Proveedor> listaProveedores = db.results(Proveedor.class);
+		//List<Personal> listaPersonal = db.results(Personal.class);
+		db.close();
+
+		PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
+
+		model.addAttribute("listaProductos",listaProductos);
+		model.addAttribute("listaProveedores",listaProveedores);
+		model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
+		model.addAttribute("puntoVenta",puntoVenta);
+		
+
+        model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
+		model.addAttribute("json_listaProveedores",JSONER.toJson(listaProveedores));
+		//model.addAttribute("json_listaPersonal",JSONER.toJson(listaPersonal));
+		 
+		return "Ingresos/registrar";
+	}
 	
 }

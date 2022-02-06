@@ -51,6 +51,10 @@ public class PuntoVenta extends ModeloGuardable{
 	}
     
 
+    public Personal gCajero() throws Exception{
+        return Personal.findOrFail(String.valueOf(this.codPersonalCajero));
+    }
+
 	
 	
 	

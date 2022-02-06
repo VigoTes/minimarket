@@ -22,7 +22,7 @@ public class TipoPersonal extends ModeloGuardable{
 	public int codTipoPersonal;
 	public static String idColumnName="codTipoPersonal";
 
-	
+	public static String codTipoCajero = "2";
 
 	@Column(name="nombre")
 	public String nombre;
@@ -47,6 +47,8 @@ public class TipoPersonal extends ModeloGuardable{
 		
 		return resultados.get(0);	
 	}
+
+
     
 
 	

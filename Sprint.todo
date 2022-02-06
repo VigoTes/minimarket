@@ -1,21 +1,25 @@
+
+
 COSAS TÉCNICAS QUE AUN NO SÉ COMO HACER:
     ✔ Pasar array JSON a un controller y recorrerlo @done(04-02-22 21:42)
     ✔ Obtener empleado logeado @done(05-02-22 17:38)
     ✔ HACER EL LOGIN XD @done(05-02-22 17:38)
-    ☐ Imprimir en una vista el emp logeado
-
+    ✔ Imprimir en una vista el emp logeado @done(05-02-22 19:40)
+    ☐ Enviar MSJs a API Telegram
+    
 CONFIG DEL PROYECTO:
     ✔ Linkear clases con tablas @done(05-02-22 17:38)
 
 
 CRUDS Básicos:
-    ☐ Producto
+    ✔ Producto @done(05-02-22 19:55)
     ☐ Categoría de producto
     ☐ Proveedor
     ☐ Punto Venta
+    ☐ Cambiar contraseña de MI Perfil
 
 CRUDs Achorados:
-    ☐ VENTA (con detalles)
-    ☐ Ingreso de productos (Lotes)
-    ☐ Personal
+    ✔ VENTA (con detalles) @done(05-02-22 19:40)
+    ✔ Ingreso de productos (Lotes) @done(05-02-22 19:40)
+    ☐ Personal (usuarios)
     
