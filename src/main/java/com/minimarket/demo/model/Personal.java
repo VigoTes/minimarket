@@ -42,6 +42,11 @@ public class Personal extends ModeloGuardable{
 		super();
 	}
  
+    public String gNombreCompleto(){
+
+        return this.apellidos  +" " + this.nombres ;
+    }
+	
 	 
 	// ESTE CÓDIGO ES FIJO, SOLO SE CAMBIA EL NOMBRE DE LA CLASE EN 3 LUGARES
 	public static Personal findOrFail(String id) throws Exception {

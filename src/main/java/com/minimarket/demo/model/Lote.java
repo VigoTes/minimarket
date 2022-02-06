@@ -10,8 +10,12 @@ import javax.persistence.Id;
 
 import javax.persistence.Table;
 
+import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Formatter;
+
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -45,9 +49,11 @@ public class Lote extends ModeloGuardable{
 	public int codIngresoAlmacen;
     @Column(name="costoCompraLote")
 	public float costoCompraLote;
+
+
     @Column(name="fechaVencimiento")
-	@Temporal(TemporalType.TIME)
-    public LocalDateTime fechaVencimiento;
+	@Temporal(TemporalType.DATE)
+    public Date fechaVencimiento;
 
 
 	public Lote() {
@@ -71,7 +77,21 @@ public class Lote extends ModeloGuardable{
     
 
     
-	
+	public String obtenerCodigoLegible() throws Exception{
+		String codigoLegible;
+		Formatter numLote = new Formatter();
+		numLote.format("%04d",this.codLote);
+		codigoLegible="LOT"+numLote+"-";
+		numLote.close();
+		Formatter numPunto = new Formatter();
+		numPunto.format("%03d",this.codPunto);
+		codigoLegible=codigoLegible+numPunto;
+		numPunto.close();
+
+		return codigoLegible;
+	}
+
+
 	
 	
 }

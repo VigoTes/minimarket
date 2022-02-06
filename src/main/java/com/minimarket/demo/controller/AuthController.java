@@ -130,9 +130,9 @@ public class AuthController {
     @GetMapping("/probandoCosas")
     public String probandoCosas(Model model, HttpSession session) throws Exception{
         
-        IngresoAlmacen i = IngresoAlmacen.findOrFail("17");
+        IngresoAlmacen i = IngresoAlmacen.findOrFail("2");
 
-        model.addAttribute("var",i.listaStringLotes());
+        model.addAttribute("var",i.obtenerCostoTotalFormateado());
 
         return "prueba";
     }

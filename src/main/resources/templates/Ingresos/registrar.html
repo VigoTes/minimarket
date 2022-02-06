@@ -14,8 +14,8 @@ xmlns:th="http://www.thymeleaf.org"
                 <div >
                     <p class="h1" style="text-align: center">REGISTRAR INGRESO</p>
                 </div>
-                
-                <form method = "POST" action ="" onsubmit="" id="frmingreso" name="frmingreso"  enctype="multipart/form-data" >           
+
+                <form method = "GET" action="/IngresoAlmacen/Guardar" id="frmingreso" name="frmingreso" >           
                     <div class="container">
                         <div class="row">           
                             <div class="col-md" ><!--COLUMNA IZQUIERDA 1-->
@@ -26,7 +26,7 @@ xmlns:th="http://www.thymeleaf.org"
                                         </div>
                                         <div class="col">
                                                     <div  style="width: 100px; " >
-                                                        <input type="text" style="margin:0px auth;" class="form-control" name="fechaIngreso" id="fechaIngreso" disabled 
+                                                        <input type="text" style="margin:0px auth;" class="form-control" name="fechaIngreso" id="fechaIngreso" readonly 
                                                             value="" >     
                                                     </div>
                                         </div>
@@ -38,7 +38,7 @@ xmlns:th="http://www.thymeleaf.org"
                                         </div>
                                         <div class="col">
                                                     <div>
-                                                        <input type="text" style="margin:0px auth;" class="form-control" name="puntoVenta" id="puntoVenta" disabled 
+                                                        <input type="text" style="margin:0px auth;" class="form-control" name="puntoVenta" id="puntoVenta" th:value="${puntoVenta.nombre}" disabled 
                                                             value="Minimarket Trujillo" >     
                                                     </div>
                                         </div>
@@ -50,7 +50,7 @@ xmlns:th="http://www.thymeleaf.org"
                                         </div>
                                         <div class="col">
                                             
-                                            <select class="form-control " name="codResponsable" id="codResponsable" >
+                                            <select class="form-control " name="codPersonal" id="codPersonal" >
                                                 <option value="-1">- Responsable -</option>
                                                 <option  th:each="personal : ${listaPersonal}" th:value="${personal.codPersonal}" th:text="${personal.nombres}">
                                                 </option>
@@ -84,13 +84,13 @@ xmlns:th="http://www.thymeleaf.org"
                                 <thead >
                                     <th width="10%"><!--cantidad-->
                                         <div >
-                                            <input type="number" min="0" class="form-control"   id="importe">     
+                                            <input type="number" min="0" class="form-control"   name="cantidad" id="cantidad" >     
                                         </div>
                                     </th>
                                     <th width="25%"><!--producto-->
                                         <div>
                                             
-                                            <select class="form-control " onchange="cambioProducto()" name="codProducto" id="codProducto" >
+                                            <select class="form-control " name="codProducto" id="codProducto" >
                                                 <option value="-1">- Producto -</option>
                                                 <option  th:each="producto : ${listaProductos}" th:value="${producto.codProducto}" th:text="${producto.nombre}">
                                                 </option>
@@ -100,7 +100,7 @@ xmlns:th="http://www.thymeleaf.org"
                                     <th width="25%"><!--proveedor-->
                                         <div>
                                             
-                                            <select class="form-control " onchange="cambioProveedor()" name="codProveedor" id="codProveedor" >
+                                            <select class="form-control " name="codProveedor" id="codProveedor" >
                                                 <option value="-1">- Proveedor -</option>
                                                 <option  th:each="proveedor : ${listaProveedores}" th:value="${proveedor.codProveedor}" th:text="${proveedor.nombre}">
                                                 </option>
@@ -121,7 +121,7 @@ xmlns:th="http://www.thymeleaf.org"
                                     </th>                               
                                     <th width="10%"><!--costo-->
                                         <div >
-                                            <input type="number" min="0" class="form-control"   id="costo">     
+                                            <input type="number" min="0" class="form-control"   name="costo" id="costo">     
                                         </div>
                                     </th>
                                     <th width="10%" class="text-center">
@@ -164,8 +164,10 @@ xmlns:th="http://www.thymeleaf.org"
                             </div>   
                             <div class="col-md-2">
                                 <!--HIDDEN PARA GUARDAR LA CANT DE ELEMENTOS DE LA TABLA-->
-                                <input type="hidden" name="cantElementos" id="cantElementos">                              
-                                <input type="hidden" class="form-control text-right" name="total" id="total" readonly>   
+                                <input type="hidden" name="cantElementos" id="cantElementos">   
+                                <input type="hidden" name="puntoVenta_codigo" id="puntoVenta_codigo" th:value="${puntoVenta.codPunto}">  
+                                <input type="hidden" name="json_detalles" id="json_detalles" value="">                        
+                                <!--<input type="hidden" class="form-control text-right" name="total" id="total" readonly>-->   
                                 <input type="text" class="form-control text-right" name="totalMostrado" id="totalMostrado" readonly>   
                                                             
                             </div>   
@@ -220,16 +222,26 @@ xmlns:th="http://www.thymeleaf.org"
 
     <script>
         var f = new Date();
-        document.getElementById("fechaIngreso").value = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+        //document.getElementById("fechaIngreso").value = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
     </script>
     <script type="application/javascript">
         //se ejecuta cada vez que escogewmos un file
     
             var cont=0;
             var total=0;
-            var detalleRepo=[];
+            var lote=[];
+            var listaProductos = [(${json_listaProductos})];
+            var listaProveedores = [(${json_listaProveedores})];
             
             $(document).ready(function(){
+                var now = new Date();
+
+                var day = ("0" + now.getDate()).slice(-2);
+                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+                var today = (day)+"/"+(month)+"/"+now.getFullYear();
+                $("#fechaIngreso").val(today);
+
                 contadorCaracteres('comentario','contador','200');
             });
     
@@ -241,16 +253,16 @@ xmlns:th="http://www.thymeleaf.org"
                         alerta(msje);
                         return false;
                     }
-                
+                document.frmingreso.submit();
                 //confirmar('¿Está seguro de registrar el ingreso?','info','frmingreso');
                 
             }
     
             function validarFormularioCrear(){
                 msj='';
-                limpiarEstilos(['codResponsable','comentario']);
+                limpiarEstilos(['codPersonal','comentario']);
     
-                msj = validarSelect(msj,'codResponsable',-1,'Responsable');
+                msj = validarSelect(msj,'codPersonal',-1,'Responsable');
     
                 msj = validarTamañoMaximoYNulidad(msj,'comentario',200,'Comentario');
     
@@ -261,6 +273,7 @@ xmlns:th="http://www.thymeleaf.org"
             }
         
     </script>
-    <script th:replace="mantenerDetalles :: mantenerDetalles"></script>
+    <script th:replace="Ingresos/mantenerDetalles :: metodosDetalles"></script>
 </body>
+
 </html>

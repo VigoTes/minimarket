@@ -47,7 +47,7 @@ public class VentaController {
 
 
 	@GetMapping("/Listar")
-	public String Listar(Model model, HttpSession session) {
+	public ModelAndView Listar(Model model, HttpSession session) {
 		
 		Database db = new Database();
 		List<Venta> listaVentas = db.results(Venta.class);
@@ -58,13 +58,13 @@ public class VentaController {
 		
 		
 		model.addAttribute("msj",ManejadorSesion.getMsj(session));
-		return "Ventas/ListarVentas";
+		return new ModelAndView("Ventas/ListarVentas");
 	}
 
 
 	
 	@GetMapping("/Crear")
-	public String Crear(Model model, HttpSession session) throws JsonProcessingException {
+	public ModelAndView Crear(ModelMap model, HttpSession session) throws JsonProcessingException {
 		
 		Database db = new Database();
 		List<Producto> listaProductos = db.results(Producto.class);
@@ -75,7 +75,8 @@ public class VentaController {
 		
         
         model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
-		return "Ventas/CrearVenta";
+        return new ModelAndView("Ventas/CrearVenta");
+		 
 	}
 
 
