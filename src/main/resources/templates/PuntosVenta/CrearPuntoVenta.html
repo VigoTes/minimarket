@@ -11,26 +11,23 @@
             <section class="content">
                 
                  
-                <form id="formPuntoVenta" name="formPuntoVenta" th:action="@{/PuntoVenta/Guardar}" method="POST">
+                <form id="formPuntoVenta" name="formPuntoVenta" th:action="@{/PuntosVenta/Guardar}" method="POST">
 
                     <div class="row ml-5 mr-5">
                         <div class="col">
-                            <label for="">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre producto">
+                            <label for="">Nombre del punto de venta</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" placeholder="Nombre del punto">
                         </div>
                         <div class="col">
-                            <label for="">Codigo Legible</label>
-                            <input type="text" class="form-control" id="codigoLegible" name="codigoLegible"  placeholder="Código prod">
+                            <label for="">Dirección del punto de venta</label>
+                            <input type="text" class="form-control" id="direccion" name="direccion"  placeholder="Dirección del punto">
                         </div>
                         <div class="w-100"></div>
+                        
                         <div class="col">
-                            <label for="">Precio Actual</label>
-                            <input type="number" class="form-control" id="precioActual" name="precioActual"  placeholder="Precio">
-                        </div>
-                        <div class="col">
-                            <label for="">Categoria</label>
-                            <select class="form-control" name="codCategoria" id="codCategoria">
-                                <option value="-1">- Categoria -</option>
+                            <label for="">Cajero:</label>
+                            <select class="form-control" name="codPersonalCajero" id="codPersonalCajero">
+                                <option value="-1">- Cajero -</option>
                                 <option  th:each="pers : ${listaCajeros}" th:value="${pers.codPersonal}" th:text="${pers.gNombreCompleto()}">
                                 </option>
 
@@ -45,7 +42,7 @@
                             <div class="row m-4">
  
                                 <div class="col text-left">
-                                    <a class="btn btn-primary" href="">
+                                    <a class="btn btn-primary" href="/PuntosVenta/Listar">
                                         
                                         <i class="fas fa-backward"></i>
                                         Menú principal
@@ -91,14 +88,14 @@
     }
     
     function validarForm(){
-        limpiarEstilos(['nombre','codigoLegible','precioActual','codCategoria']);
+        limpiarEstilos(['nombre','direccion','codPersonalCajero']);
         msj = "";
-
+        
         msj = validarTamañoMaximoYNulidad(msj,'nombre',200,'Nombre');
-        msj = validarTamañoMaximoYNulidad(msj,'codigoLegible',100,'Código del producto');
+        msj = validarTamañoMaximoYNulidad(msj,'direccion',100,'Dirección del punto de venta');
 
-        msj = validarPositividadYNulidad(msj,'precioActual','Precio actual')
-        msj = validarSelect(msj,'codCategoria','-1','Categoría');
+        
+        msj = validarSelect(msj,'codPersonalCajero','-1','Personal Cajero');
         return msj;
 
     }

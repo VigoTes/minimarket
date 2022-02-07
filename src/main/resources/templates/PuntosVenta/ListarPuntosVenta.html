@@ -40,13 +40,16 @@
                                 Direccion
                             </th>
                             <th>
+                                Estado
+                            </th>
+                            <th>
                                 Opciones
                             </th>
 
                         </tr>
                     </thead>    
                     <tbody>
-                        <tr th:each="puntoVenta : ${listaPuntosVenta}" >
+                        <tr th:each="puntoVenta : ${listaPuntosVenta}"  th:class="${puntoVenta.gColor()}" >
                             <td  th:text="${puntoVenta.codPunto}">
                              
                             </td>
@@ -59,10 +62,45 @@
                             <td th:text="${puntoVenta.direccion}">
                              
                             </td>
+                            <td th:text="${puntoVenta.gEstado()}">
+
+                            </td>
                             <td>
-                                <a class="btn btn-info btn-xs" th:href="@{'/PuntosVenta/Editar/' + ${puntoVenta.codPuntoVenta}}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                
+
+
+                                <!-- HABILITADO -->
+                                <span th:if="${puntoVenta.estaActivo ()}">
+                                    <a class="btn btn-info btn-xs" th:href="@{'/PuntosVenta/Editar/' + ${puntoVenta.codPunto}}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                     
+                                    <button class="btn btn-danger btn-xs" type="button" 
+                                        th:attr="onclick=${
+                                            'clickDeshabilitar('
+                                            + puntoVenta.codPunto 
+                                            + ',`'
+                                            + puntoVenta.nombre 
+                                            + '`)'
+                                            }">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </span>
+
+                                <!-- DESHABILITADO -->
+                                <span th:if="${!puntoVenta.estaActivo ()}">
+                                    <button class="btn btn-success btn-xs" type="button" 
+                                        th:attr="onclick=${
+                                            'clickHabilitar('
+                                            + puntoVenta.codPunto 
+                                            + ',`'
+                                            + puntoVenta.nombre 
+                                            + '`)'
+                                            }">
+                                            <i class="fas fa-level-up-alt"></i>
+                                    </button>
+                                </span>
+
                                
                             </td>
 
@@ -87,4 +125,42 @@
 
     </style>
 </body>
+<script th:replace = "Layout/ValidatorJS :: validatorJS"></script>
+
+<script>
+
+    codPuntoADeshabilitar = 0;
+    function clickDeshabilitar(codPunto,nombre){
+    
+        codPuntoADeshabilitar = codPunto; 
+        confirmarConMensaje("Confirmación","¿Desea DESHABILITAR el punto de venta '" + nombre + "'?","warning",ejecutarDeshabilitar)
+
+        
+    }
+    
+    function ejecutarDeshabilitar(){
+       location.href = "/PuntosVenta/Deshabilitar/" + codPuntoADeshabilitar;
+
+    }
+
+
+
+
+    
+    codPuntoAHabilitar = 0;
+    function clickHabilitar(codPunto,nombre){
+    
+        codPuntoAHabilitar = codPunto; 
+        confirmarConMensaje("Confirmación","¿Desea HABILITAR el punto de venta '" + nombre + "'?","warning",ejecutarHabilitar)
+
+        
+    }
+    
+    function ejecutarHabilitar(){
+       location.href = "/PuntosVenta/Habilitar/" + codPuntoAHabilitar;
+
+    }
+
+</script>
+
 </html>

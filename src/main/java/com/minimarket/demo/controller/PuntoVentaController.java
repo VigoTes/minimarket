@@ -35,7 +35,6 @@ public class PuntoVentaController {
 
 
 
-
 	@GetMapping("/Listar")
 	public String Listar(Model model, HttpSession session) {
 		
@@ -44,7 +43,7 @@ public class PuntoVentaController {
 		model.addAttribute("listaPuntosVenta",listaPuntosVenta);
 		
 		db.close();
-
+        
 		
 		
 		 
@@ -68,17 +67,17 @@ public class PuntoVentaController {
 
 
 	
-	@GetMapping("/Editar/{codPuntoVenta}")
-	public String Editar(Model model, HttpSession session,@PathVariable int codPuntoVenta)  throws Exception {
+	@GetMapping("/Editar/{codPunto}")
+	public String Editar(Model model, HttpSession session,@PathVariable int codPunto)  throws Exception {
 		
 		Database db = new Database();
 		 
-        List<Personal> listaCajeros = db.where("codTipoPersonal=?", TipoPersonal.codTipoCajero) .results(Personal.class);
+        List<Personal> listaCajeros = db.where("codTipoPersonal=?", TipoPersonal.codTipoCajero).results(Personal.class);
 		model.addAttribute("listaCajeros",listaCajeros);
 
         
-		PuntoVenta x = PuntoVenta.findOrFail(String.valueOf(codPuntoVenta));
-        model.addAttribute("puntoVenta",x);
+		PuntoVenta x = PuntoVenta.findOrFail(String.valueOf(codPunto));
+        model.addAttribute("punto",x);
 		
 		db.close();
 
@@ -93,13 +92,14 @@ public class PuntoVentaController {
 
 	@PostMapping("/Guardar")
 	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request
-		,String direccion,  String nombre, String codPersonalCajero, float precioActual) {
+		,String direccion,  String nombre, String codPersonalCajero) {
 		
 	 
 		PuntoVenta x = new PuntoVenta();
         x.nombre = nombre;
         x.direccion = direccion;
         x.codPersonalCajero = Integer.parseInt(codPersonalCajero);
+        x.activo = 1;
 		x.guardar();
 
 		ManejadorSesion.addMsj(request, "Se ha creado el PuntoVenta '" + x.nombre  + "'.");
@@ -107,11 +107,11 @@ public class PuntoVentaController {
 	}
 
 
-	@GetMapping("/Actualizar")
-	public ModelAndView  Actualizar(ModelMap  model, int codPuntoVenta, HttpServletRequest request
+	@PostMapping("/Actualizar")
+	public ModelAndView  Actualizar(ModelMap  model, int codPunto, HttpServletRequest request
 		,String direccion, String nombre, String codPersonalCajero) throws Exception {
 		 
-		PuntoVenta x = PuntoVenta.findOrFail(String.valueOf(codPuntoVenta));
+		PuntoVenta x = PuntoVenta.findOrFail(String.valueOf(codPunto));
        
         x.nombre = nombre;
         x.direccion = direccion;
@@ -122,11 +122,6 @@ public class PuntoVentaController {
 		return new ModelAndView ("redirect:/PuntosVenta/Listar", model);
 	}
 
-
-
-
- 
-
 	@GetMapping("/Ver")
 	public String Ver(Model model,String id) throws Exception {
 		
@@ -136,27 +131,33 @@ public class PuntoVentaController {
 		return "prueba";
 	}
 	
-	@GetMapping("/Eliminar")
-	public String Eliminar(Model model,String codPuntoVenta) throws NumberFormatException, Exception {
+	@GetMapping("/Deshabilitar/{codPunto}")
+	public ModelAndView Deshabilitar( HttpServletRequest request,ModelMap model, @PathVariable  String codPunto) throws NumberFormatException, Exception {
 		
-		//añadir verificacion si el prod está siendo usado
-		
-		PuntoVenta prod = PuntoVenta.findOrFail(codPuntoVenta);
-		prod.eliminar();
-		
-		return "prueba";
 		 
-	}
-	
-	
-	
-	@GetMapping("/prueba")
-	public ModelAndView prueba (ModelMap  model,HttpServletRequest request) throws Exception {
-		 
-		ManejadorSesion.addMsj(request, "Se ha eliminado el pas");
+		PuntoVenta punto = PuntoVenta.findOrFail(codPunto);
+        punto.activo = 0;
+		punto.guardar();
+		
+		ManejadorSesion.addMsj(request, "Se ha DESHABILITADO el Punto Venta '" + punto.nombre  + "'.");
 		return new ModelAndView ("redirect:/PuntosVenta/Listar", model);
+		 
 	}
-
+	
+    @GetMapping("/Habilitar/{codPunto}")
+	public ModelAndView Habilitar( HttpServletRequest request,ModelMap model, @PathVariable  String codPunto) throws NumberFormatException, Exception {
+		
+		 
+		PuntoVenta punto = PuntoVenta.findOrFail(codPunto);
+        punto.activo = 1;
+		punto.guardar();
+		
+		ManejadorSesion.addMsj(request, "Se ha HABILITADO el Punto Venta '" + punto.nombre  + "'.");
+		return new ModelAndView ("redirect:/PuntosVenta/Listar", model);
+		 
+	}
+	
+	 
 
 	
 

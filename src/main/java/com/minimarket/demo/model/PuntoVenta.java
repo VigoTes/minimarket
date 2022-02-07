@@ -28,8 +28,13 @@ public class PuntoVenta extends ModeloGuardable{
 	public String nombre;    
     @Column(name="codPersonalCajero")
 	public int codPersonalCajero;
-	@Column(name="direccion")
+	
+    @Column(name="direccion")
 	public String direccion;
+
+    @Column(name="activo")
+	public int activo;
+	
 	
 	public PuntoVenta() {
 		super();
@@ -55,7 +60,26 @@ public class PuntoVenta extends ModeloGuardable{
         return Personal.findOrFail(String.valueOf(this.codPersonalCajero));
     }
 
+    public String gEstado(){
+        if(this.estaActivo())
+            return "Activo";
+        
+        return "Deshabilitado";
+            
+    } 
 	
-	
+	public String gColor(){
+
+        if(!this.estaActivo())
+            return "rojo";
+
+        return "";
+
+    }
+
+    public boolean estaActivo(){
+        return this.activo==1;
+
+    }
 	
 }
