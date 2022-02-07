@@ -14,8 +14,8 @@ CONFIG DEL PROYECTO:
 CRUDS Básicos:
     ✔ Producto @done(05-02-22 19:55)
     ☐ Categoría de producto
-    ☐ Proveedor
-    ☐ Punto Venta
+    ✔ Proveedor @done(06-02-22 23:25)
+    ✔ Punto Venta @done(06-02-22 22:58)
     ☐ Cambiar contraseña de MI Perfil
 
 CRUDs Achorados:
