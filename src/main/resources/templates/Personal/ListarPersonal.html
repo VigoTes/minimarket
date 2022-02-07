@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                
+                
+                <div th:replace="Layout/Mensaje"></div>
+	            
+                <div class="row m-1">
+
+
+                    <a class="btn btn-primary" href="/Personal/Crear">
+                        <i class="fas fa-plus"></i>
+                        Nuevo personal
+                    </a>
+                    
+                </div>
+
+                <table class="m-3 table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Nombre
+                            </th>
+                            <th>
+                                DNI
+                            </th>
+                         
+                            <th>
+                                Rol
+                            </th>
+                            <th>
+                                Usuario
+                            </th>
+                            <th>
+                                Estado
+                            </th>
+                            <th>
+                                Opciones
+                            </th>
+
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr th:each="personal : ${listaPersonal}"  th:class="${personal.gColor()}" >
+                            <td  th:text="${personal.gNombreCompleto()}">
+                             
+                            </td>
+                            <td th:text="${personal.dni}">
+                             
+                            </td>
+                            
+                            <td th:text="${personal.gTipoPersonal().nombre}">
+                             
+                            </td>
+                            <td th:text="${personal.gUsuario().usuario}">
+
+                            </td>
+                            <td th:text="${personal.gActivoTexto()}">
+
+                            </td>
+                            <td>
+                                
+
+
+                                <!-- HABILITADO -->
+                                <span th:if="${personal.estaActivo ()}">
+                                    <a class="btn btn-info btn-xs" th:href="@{'/Personal/Editar/' + ${personal.codPersonal}}">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                     
+                                    <button class="btn btn-danger btn-xs" type="button" 
+                                        th:attr="onclick=${
+                                            'clickDeshabilitar('
+                                            + personal.codPersonal 
+                                            + ',`'
+                                            + personal.gNombreCompleto() 
+                                            + '`)'
+                                            }">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </span>
+
+                                <!-- DESHABILITADO -->
+                                <span th:if="${!personal.estaActivo ()}">
+                                    <button class="btn btn-success btn-xs" type="button" 
+                                        th:attr="onclick=${
+                                            'clickHabilitar('
+                                            + personal.codPersonal 
+                                            + ',`'
+                                            + personal.gNombreCompleto() 
+                                            + '`)'
+                                            }">
+                                            <i class="fas fa-level-up-alt"></i>
+                                    </button>
+                                </span>
+
+                               
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                    
+                </table>
+                
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <style>
+        .rojo{
+            background-color: rgba(211, 136, 136, 0.445);
+        }
+
+    </style>
+</body>
+<script th:replace = "Layout/ValidatorJS :: validatorJS"></script>
+
+<script>
+
+    codPersonalADeshabilitar = 0;
+    function clickDeshabilitar(codPersonal,nombre){
+    
+        codPersonalADeshabilitar = codPersonal; 
+        confirmarConMensaje("Confirmación","¿Desea DESHABILITAR el personal '" + nombre + "'?","warning",ejecutarDeshabilitar)
+
+        
+    }
+    
+    function ejecutarDeshabilitar(){
+       location.href = "/Personal/Deshabilitar/" + codPersonalADeshabilitar;
+
+    }
+
+
+
+
+    
+    codPersonalAHabilitar = 0;
+    function clickHabilitar(codPersonal,nombre){
+    
+        codPersonalAHabilitar = codPersonal; 
+        confirmarConMensaje("Confirmación","¿Desea HABILITAR el personal '" + nombre + "'?","warning",ejecutarHabilitar)
+
+        
+    }
+    
+    function ejecutarHabilitar(){
+       location.href = "/Personal/Habilitar/" + codPersonalAHabilitar;
+
+    }
+
+</script>
+
+</html>
