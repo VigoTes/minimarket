@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
- 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL; 
+
 import org.springframework.web.bind.annotation.PathVariable;
 import com.dieselpoint.norm.Database;
 import com.dieselpoint.norm.sqlmakers.Property;
@@ -29,6 +33,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.minimarket.demo.model.Categoria;
+import com.minimarket.demo.model.Cliente;
 import com.minimarket.demo.model.DetalleVenta;
 import com.minimarket.demo.model.EstadoProducto;
 import com.minimarket.demo.model.ModeloGuardable;
@@ -68,13 +73,17 @@ public class VentaController {
 		
 		Database db = new Database();
 		List<Producto> listaProductos = db.results(Producto.class);
-
+        List<Cliente> listaClientes = db.results(Cliente.class);
+        
 		model.addAttribute("listaProductos",listaProductos);
+		model.addAttribute("listaClientes",listaProductos);
 		
 		db.close();
 		
         
         model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
+        model.addAttribute("json_listaClientes",JSONER.toJson(listaClientes));
+        
         return new ModelAndView("Ventas/CrearVenta");
 		 
 	}

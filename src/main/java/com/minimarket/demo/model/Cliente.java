@@ -18,13 +18,15 @@ public class Cliente extends ModeloGuardable{
 	public static String tableName="cliente";
 	
 	@Id
-	public String dni;
-	public static String idColumnName="dni";
+	public int codCliente;
+	public static String idColumnName="codCliente";
 
 	
 
+	@Column(name="dni")
+	public String dni;
 	@Column(name="nombres")
-	public String nombre;
+	public String nombres;
     @Column(name="apellidos")
 	public String apellidos;
 	
@@ -51,7 +53,7 @@ public class Cliente extends ModeloGuardable{
 
     public String gNombreCompleto(){
 
-        return this.apellidos  +" " + this.nombre ;
+        return this.apellidos  +" " + this.nombres ;
     }
 	
 	

@@ -38,6 +38,10 @@ public class Personal extends ModeloGuardable{
 	@Column(name="codUsuario")
 	public int codUsuario;
 
+    @Column(name="activo")
+	public int activo;
+
+
 	public Personal() {
 		super();
 	}
@@ -86,9 +90,35 @@ public class Personal extends ModeloGuardable{
 	}
 
 
+	public String obtenerNombreCompleto() throws Exception{
+		return this.nombres+' '+this.apellidos;
+	}
     
 
+	public String gColor(){
+        if(this.activo==0)
+            return "rojo";
+
+        return "";
+
+    }
+
+    public boolean estaActivo(){
+        return this.activo==1;
+    }
+
+    public TipoPersonal gTipoPersonal() throws Exception{
+        return TipoPersonal.findOrFail(   String.valueOf(this.codTipoPersonal));
+    }
+    public Usuario gUsuario() throws Exception{
+        return Usuario.findOrFail(String.valueOf(this.codUsuario));
+    }
     
-	
+	public String gActivoTexto(){
+        if(this.estaActivo())
+            return "Habilitado";
+
+        return "Deshabilitado";
+    }
 	
 }
