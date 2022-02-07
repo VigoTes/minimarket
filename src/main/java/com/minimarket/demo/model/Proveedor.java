@@ -24,12 +24,16 @@ public class Proveedor extends ModeloGuardable{
 
 	
 
-	@Column(name="nombre")
-	public String nombre;
+	@Column(name="razonSocial")
+	public String razonSocial;
     @Column(name="ruc")
 	public String ruc;
-	@Column(name="contacto")
-	public String contacto;
+
+	@Column(name="nombreContacto")
+	public String nombreContacto;
+	
+	@Column(name="telefonoContacto")
+	public String telefonoContacto;
 	
 	public Proveedor() {
 		super();

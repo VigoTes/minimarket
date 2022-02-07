@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                
+                
+                <div th:replace="Layout/Mensaje"></div>
+	            
+                <div class="row m-1">
+
+
+                    <a class="btn btn-primary" href="/Proveedores/Crear">
+                        <i class="fas fa-plus"></i>
+                        Nuevo proveedor
+                    </a>
+                    
+                </div>
+
+                <table class="m-3 table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Código
+                            </th>
+                            <th>
+                                Razon Social
+                            </th>
+
+                            <th>
+                                Ruc
+                            </th>
+                            <th>
+                                Contacto
+                            </th>
+                            <th>
+                                Teléfono
+                            </th>
+
+                            <th>
+                                Opciones
+                            </th>
+
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr th:each="proveedor : ${listaProveedores}">
+                            <td  th:text="${proveedor.codProveedor}">
+                             
+                            </td>
+                            <td th:text="${proveedor.razonSocial}">
+                             
+                            </td>
+
+                            <td th:text="${proveedor.ruc}">
+                             
+                            </td>
+                            
+                            <td  th:text="${proveedor.nombreContacto}">
+                               
+                            </td>
+                            <td th:text="${proveedor.telefonoContacto}">
+
+                            </td>
+                          
+                            <td>
+                                
+                                <a class="btn btn-info btn-xs" th:href="@{'/Proveedores/Editar/' + ${proveedor.codProveedor}}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                 
+
+                               
+                            </td>
+
+
+                        </tr>
+                    </tbody>
+                    
+                </table>
+                
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+    
+</body>
+<script th:replace = "Layout/ValidatorJS :: validatorJS"></script>
+
+ 
+
+</html>
