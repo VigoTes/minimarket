@@ -9,20 +9,24 @@
       	
         <div class="content-wrapper">
             <section class="content">
-                
+
+                <div class="loader" id="pantallaCarga"></div>
+
                  <div class="container">
                     <form id="formVenta" name="formVenta" action="/Ventas/Guardar" method="GET">
                             
                         <div class="row m-2">
                             
                             
-                            <input type="text" style="width:10%" class="m-1 form-control" id="dni" name="dni" placeholder="DNI">
+                            <input type="number" style="width:20%" class="m-1 form-control" id="dni" name="dni" placeholder="DNI">
+                           
 
-                            <input type="text" style="width: 60%;" class="m-1 form-control" id="nombres" name="nombres" placeholder="Nombres y apellidos"  >
-                            <button style="width:5%" class="btn btn-primary btn-sm" type="">
-                                <i class="fas fa-search"></i>
-                            </button>
-
+                            <input type="text" style="width: 30%;" class="m-1 form-control" id="nombres" name="nombres" placeholder="Nombres" readonly >
+                            <input type="text" style="width: 30%;" class="m-1 form-control" id="apellidos" name="apellidos" placeholder="Apellidos" readonly >
+                             
+                            <button type="button" class="btn btn-success btn-sm"> 
+                                Nuevo Cliente
+                            </button>       
     
                         </div>
                         
@@ -168,6 +172,10 @@
 <script>
 
     var listaProductos = [(${json_listaProductos})];
+
+    var listaClientes = [(${json_listaClientes})];
+
+    
     var listaDetalles = [];
 
     var productoSeleccionado;
@@ -175,9 +183,34 @@
 
     
     $(document).ready(function(){
-        
+        iniciarIdentificadorClientes();
+        $(".loader").fadeOut("slow");
     });
 
+
+    function iniciarIdentificadorClientes() {
+        
+        setInterval(function(){
+             
+            dni = document.getElementById('dni').value;
+            if(dni.length==8){
+                lista = listaClientes.filter(element => element.dni == dni)
+                if(lista.length>0){ //si lo encontró
+                    clienteEncontrado = lista[0];
+                    console.log(clienteEncontrado)
+                    document.getElementById('nombres').value = clienteEncontrado.nombres;
+                    document.getElementById('apellidos').value = clienteEncontrado.apellidos;
+                }else{
+                    document.getElementById('nombres').value = "";
+                    document.getElementById('apellidos').value = "";
+                }
+                
+            }
+
+        }, 0700);
+    
+    
+    }
 
 
     function clickGuardar(){
@@ -339,6 +372,59 @@
     }
 
 
+        function consultarPorDNI(){
+
+            msjError="";
+
+            msjError = validarTamañoExacto(msjError,'DNI',8,'DNI');
+            msjError = validarNulidad(msjError,'DNI','DNI');
+            
+
+            if(msjError!=""){
+                alerta(msjError);
+                return;
+            }
+
+
+            $(".loader").show();//para mostrar la pantalla de carga
+            dni = document.getElementById('DNI').value;
+
+            $.get('/ConsultarAPISunat/dni/'+dni,
+            function(data)
+            {     
+                console.log("IMPRIMIENDO DATA como llegó:");
+                
+                data = JSON.parse(data);
+                  
+                console.log(data);
+                persona = data.datos;
+
+                alertaMensaje(data.mensaje,data.titulo,data.tipoWarning);
+
+                if(data.ok==1){
+                    document.getElementById('nombres').value   = persona.nombres; 
+                    document.getElementById('apellidos').value =  persona.apellidoPaterno + " " + persona.apellidoMaterno;
+
+
+                    
+
+                }
+             
+                $(".loader").fadeOut("slow");
+            }
+            );
+        }
+
+
+
+
+
+
+
+
+
+
+ 
 
 
 </script>

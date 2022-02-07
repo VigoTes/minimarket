@@ -30,6 +30,8 @@ public class IngresoAlmacen extends ModeloGuardable{
 
 	@Column(name="codPersonalQueIngreso")
 	public int codPersonalQueIngreso;
+	@Column(name="comentario")
+	public String comentario;
     @Column(name="costoTotal")
 	public float costoTotal; 
 	@Column(name="fechaHoraIngreso")
@@ -54,17 +56,26 @@ public class IngresoAlmacen extends ModeloGuardable{
 		
 		return resultados.get(0);	
 	}
-    
 
-    public String listaStringLotes() throws Exception {
+	public List<Lote> obtenerLotes() throws Exception{
 		Database db = new Database();
 		List<Lote> listaLote = db.where("codIngresoAlmacen=?", this.codIngresoAlmacen).results(Lote.class);
 		db.close();
 		if(listaLote.size()==0) {
 			throw new Exception("No existen lotes de ingreso "+this.codIngresoAlmacen);
 		}
+
+		return listaLote;
+	}
+    
+
+	public PuntoVenta obtenerPuntoVenta() throws Exception{
+		return PuntoVenta.findOrFail(this.obtenerLotes().get(0).codPunto+"");
+	}
+
+    public String listaStringLotes() throws Exception {
 		String cadena="";
-		for (Lote lote: listaLote) cadena=cadena+lote.codigoLegible+" - ";
+		for (Lote lote: this.obtenerLotes()) cadena=cadena+lote.codigoLegible+" - ";
 
 		int caracteresMaximos=40;
 		if(cadena.length()<caracteresMaximos){
@@ -93,6 +104,13 @@ public class IngresoAlmacen extends ModeloGuardable{
 		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
     	return this.fechaHoraIngreso.format(dtf);
 	}
+
+	public String obtenerFechaIngresoFormateada() throws Exception{
+		String str = this.obtenerFechaHoraIngresoFormateada();
+        String[] newStr = str.split("\\s+");
+    	return newStr[0];
+	}
+
 
 	public String obtenerCostoTotalFormateado() throws Exception{
 		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");

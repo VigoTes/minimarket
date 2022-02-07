@@ -58,8 +58,8 @@ public class IngresoController {
 
 		model.addAttribute("listaIngresos",listaIngresos);
 		
+        
 		model.addAttribute("msj",ManejadorSesion.getMsj(session));
-		
 		return "Ingresos/listar";
 	}
 
@@ -89,7 +89,7 @@ public class IngresoController {
 	
 	@GetMapping("/Guardar")
 	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request
-		                        ,String json_detalles,  String codPersonal, String puntoVenta_codigo) throws Exception {
+		                        ,String json_detalles,  String codPersonal, String puntoVenta_codigo,  String comentario) throws Exception {
                                     
 		
             Debug.print(json_detalles);
@@ -99,6 +99,7 @@ public class IngresoController {
             IngresoAlmacen ingreso = new IngresoAlmacen();
 			ingreso.fechaHoraIngreso = LocalDateTime.now();
             ingreso.codPersonalQueIngreso = Integer.valueOf(codPersonal);
+			ingreso.comentario = comentario;
 			ingreso.costoTotal = 0;
             ingreso.guardar();
             
@@ -154,26 +155,98 @@ public class IngresoController {
 	
 	@GetMapping("/Editar/{codIngresoAlmacen}")
 	public String editarIngreso(Model model, HttpSession sessionl, @PathVariable("codIngresoAlmacen") String codIngresoAlmacen) throws Exception {
-		
+		IngresoAlmacen ingresoAlmacen = IngresoAlmacen.findOrFail(codIngresoAlmacen);
+
 		Database db = new Database();
 		List<Producto> listaProductos = db.results(Producto.class);
 		List<Proveedor> listaProveedores = db.results(Proveedor.class);
-		//List<Personal> listaPersonal = db.results(Personal.class);
 		db.close();
 
-		PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
+		//PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
 
 		model.addAttribute("listaProductos",listaProductos);
 		model.addAttribute("listaProveedores",listaProveedores);
 		model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
-		model.addAttribute("puntoVenta",puntoVenta);
+		model.addAttribute("ingresoAlmacen",ingresoAlmacen);
+		model.addAttribute("puntoVenta",ingresoAlmacen.obtenerPuntoVenta());
 		
 
         model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
 		model.addAttribute("json_listaProveedores",JSONER.toJson(listaProveedores));
+		model.addAttribute("json_detallesGuardados",JSONER.toJson(ingresoAlmacen.obtenerLotes()));
 		//model.addAttribute("json_listaPersonal",JSONER.toJson(listaPersonal));
 		 
-		return "Ingresos/registrar";
+		return "Ingresos/editar";
 	}
 	
+
+	@GetMapping("/Actualizar")
+	public ModelAndView  Actualizar(ModelMap  model , HttpServletRequest request
+		                        ,String json_detalles,  String codPersonal, String puntoVenta_codigo,  String comentario,  String codIngresoAlmacen) throws Exception {
+                                    
+		
+            Debug.print(json_detalles);
+            
+            JSONArray array = new JSONArray(json_detalles);
+        
+            IngresoAlmacen ingreso = IngresoAlmacen.findOrFail(codIngresoAlmacen);
+			//ingreso.fechaHoraIngreso = LocalDateTime.now();
+            ingreso.codPersonalQueIngreso = Integer.valueOf(codPersonal);
+			ingreso.comentario = comentario;
+			ingreso.costoTotal = 0;
+            ingreso.guardar();
+
+			for(Lote lote:ingreso.obtenerLotes()){
+				lote.eliminar();
+			}
+            
+			int codPunto = Integer.valueOf(puntoVenta_codigo);
+
+            float total = 0; 
+			float costo;
+            int cantidad;
+			Date fechaVencimiento;
+
+            for (int i = 0; i < array.length (); i++) {
+				JSONObject jsonObj = array.getJSONObject(i);
+				Debug.print(jsonObj.toString());
+				
+				cantidad = Integer.valueOf(jsonObj.get("cantidad").toString());
+				JSONObject productoObj = new JSONObject(jsonObj.get("producto").toString());
+				JSONObject proveedorObj = new JSONObject(jsonObj.get("proveedor").toString());
+				//fechaVencimiento = LocalDate.parse(jsonObj.get("fechaVencimiento").toString()+" 00:00", formatoObtenerFecha);
+				fechaVencimiento = new SimpleDateFormat("dd/MM/yyyy").parse(jsonObj.get("fechaVencimiento").toString());
+				costo = Float.valueOf(jsonObj.get("costo").toString());
+				
+				Lote lote = new Lote();
+				lote.codProducto =Integer.parseInt(productoObj.get("codProducto").toString());
+				lote.codPunto = codPunto;
+				
+				
+				
+				lote.stock = cantidad;
+				
+				
+				
+				lote.fechaVencimiento=fechaVencimiento;
+				lote.stockIngresado=cantidad;
+				lote.codIngresoAlmacen=ingreso.codIngresoAlmacen;
+				lote.costoCompraLote=costo;
+				lote.codigoLegible="";
+				lote.codProveedor=Integer.parseInt(proveedorObj.get("codProveedor").toString());
+				lote.guardar();
+				lote.codigoLegible=lote.obtenerCodigoLegible();
+				lote.guardar();
+
+				total += lote.costoCompraLote;
+				
+            }
+            
+            ingreso.costoTotal = total;
+            ingreso.guardar();
+           
+			
+            ManejadorSesion.addMsj(request, "Ingreso editado exitosamente.");
+            return new ModelAndView ("redirect:/IngresoAlmacen/Listar", model);
+	}
 }

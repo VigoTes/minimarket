@@ -12,10 +12,10 @@ xmlns:th="http://www.thymeleaf.org"
         <div class="content-wrapper">
             <section class="content"> <!--contenido-->
                 <div >
-                    <p class="h1" style="text-align: center">REGISTRAR INGRESO</p>
+                    <p class="h1" style="text-align: center">EDITAR INGRESO</p>
                 </div>
 
-                <form method = "GET" action="/IngresoAlmacen/Guardar" id="frmingreso" name="frmingreso" >           
+                <form method = "GET" action="/IngresoAlmacen/Actualizar" id="frmingreso" name="frmingreso" >           
                     <div class="container">
                         <div class="row">           
                             <div class="col-md" ><!--COLUMNA IZQUIERDA 1-->
@@ -27,7 +27,7 @@ xmlns:th="http://www.thymeleaf.org"
                                         <div class="col">
                                                     <div  style="width: 100px; " >
                                                         <input type="text" style="margin:0px auth;" class="form-control" name="fechaIngreso" id="fechaIngreso" readonly 
-                                                            value="" >     
+                                                        th:value="${ingresoAlmacen.obtenerFechaIngresoFormateada()}" >     
                                                     </div>
                                         </div>
                                       
@@ -52,7 +52,7 @@ xmlns:th="http://www.thymeleaf.org"
                                             
                                             <select class="form-control " name="codPersonal" id="codPersonal" >
                                                 <option value="-1">- Responsable -</option>
-                                                <option  th:each="personal : ${listaPersonal}" th:value="${personal.codPersonal}" th:text="${personal.nombres}">
+                                                <option  th:each="personal : ${listaPersonal}" th:value="${personal.codPersonal}" th:text="${personal.obtenerNombreCompleto()}" th:selected="${personal.codPersonal==ingresoAlmacen.codPersonalQueIngreso}" >
                                                 </option>
                                             </select>      
                                         </div>
@@ -64,7 +64,7 @@ xmlns:th="http://www.thymeleaf.org"
                             <div class="col-md"><!--COLUMNA DERECHA-->
                                 <div style="margin-bottom: 1%">
                                     <label for="fecha">Comentario: <b id="contador" style="color: rgba(0, 0, 0, 0.548)"></b></label>
-                                    <textarea class="form-control" name="comentario" id="comentario" aria-label="With textarea"
+                                    <textarea class="form-control" name="comentario" id="comentario" aria-label="With textarea" th:text="${ingresoAlmacen.comentario}"
                                          rows="3"></textarea>
                                 </div>
                                 
@@ -92,7 +92,7 @@ xmlns:th="http://www.thymeleaf.org"
                                             
                                             <select class="form-control " name="codProducto" id="codProducto" >
                                                 <option value="-1">- Producto -</option>
-                                                <option  th:each="producto : ${listaProductos}" th:value="${producto.codProducto}" th:text="${producto.nombre}">
+                                                <option  th:each="producto : ${listaProductos}" th:value="${producto.codProducto}" th:text="${producto.nombre}" >
                                                 </option>
                                             </select>      
                                         </div> 
@@ -164,6 +164,7 @@ xmlns:th="http://www.thymeleaf.org"
                             </div>   
                             <div class="col-md-2">
                                 <!--HIDDEN PARA GUARDAR LA CANT DE ELEMENTOS DE LA TABLA-->
+                                <input type="hidden" name="codIngresoAlmacen" id="codIngresoAlmacen" th:value="${ingresoAlmacen.codIngresoAlmacen}">   
                                 <input type="hidden" name="cantElementos" id="cantElementos">   
                                 <input type="hidden" name="puntoVenta_codigo" id="puntoVenta_codigo" th:value="${puntoVenta.codPunto}">  
                                 <input type="hidden" name="json_detalles" id="json_detalles" value="">                        
@@ -229,11 +230,14 @@ xmlns:th="http://www.thymeleaf.org"
     
             var cont=0;
             var total=0;
+            var detallesGuardados=[(${json_detallesGuardados})];
             var lote=[];
             var listaProductos = [(${json_listaProductos})];
             var listaProveedores = [(${json_listaProveedores})];
+
             
             $(document).ready(function(){
+                /*
                 var now = new Date();
 
                 var day = ("0" + now.getDate()).slice(-2);
@@ -241,6 +245,21 @@ xmlns:th="http://www.thymeleaf.org"
 
                 var today = (day)+"/"+(month)+"/"+now.getFullYear();
                 $("#fechaIngreso").val(today);
+                */
+                //document.getElementById("comentario").value=comentario+"xx";
+                var fecha;
+                for (let index = 0; index < detallesGuardados.length; index++) {   
+                    fecha = new Date(detallesGuardados[index].fechaVencimiento); 
+                    lote.push({
+                        cantidad:detallesGuardados[index].stockIngresado,
+                        producto:listaProductos.find(m => m.codProducto == detallesGuardados[index].codProducto),
+                        proveedor:listaProveedores.find(m => m.codProveedor == detallesGuardados[index].codProveedor),         
+                        fechaVencimiento: fecha.toLocaleDateString(),
+                        costo:detallesGuardados[index].costoCompraLote
+                    });
+                }
+                cont = detallesGuardados.length;
+                actualizarTabla();
 
                 contadorCaracteres('comentario','contador','200');
             });

@@ -70,7 +70,7 @@ xmlns:th="http://www.thymeleaf.org"
                                 <td th:text="${ingreso.obtenerCostoTotalFormateado()}" style = "padding: 0.40rem"></td>
                                 <td>
 
-                                    <a href="" class="btn btn-warning btn-xs" title="Editar">
+                                    <a href="" class="btn btn-warning btn-xs" title="Editar" th:href="@{'/IngresoAlmacen/Editar/' + ${ingreso.codIngresoAlmacen}}">
                                         <i class="fas fa-edit"></i>
                                     </a>
                     
