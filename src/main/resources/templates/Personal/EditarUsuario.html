@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                 
+                <form id="formPersonal" name="formPersonal" th:action="@{/Personal/ActualizarUsuario}" method="POST">
+                    <input type="hidden" id="codUsuario" name="codUsuario" th:value="${usuario.codUsuario}">
+                    <div class="row ml-5 mr-5">
+                         
+                         
+
+                        <div class="col">
+                            <label for="">Usuario</label>
+                            <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Usuario"  th:value="${usuario.usuario}">
+                        </div>
+                        <div class="col">
+                            <label for="">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="password"  placeholder="Usuario">
+                        </div>
+                        <div class="col">
+                            <label for="">Repetir nueva Contraseña</label>
+                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Repetir contraseña">
+                        </div>
+                        <div class="w-100"></div>
+
+                        <div class="col">
+
+
+                            <div class="row m-4">
+ 
+                                <div class="col text-left">
+                                    <a class="btn btn-primary" href="/Personal/Listar">
+                                        
+                                        <i class="fas fa-backward"></i>
+                                        Menú principal
+                                    </a>
+        
+                                </div>
+                                <div class="col text-right">
+        
+                                    <button class="btn btn-primary" type ="button" onclick="clickGuardar()">
+                                        <i class="fas fa-save"></i>
+                                        Guardar
+                                    </button>
+        
+                                </div>
+        
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    
+                </form>
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+</body>
+
+<script th:replace = "Layout/ValidatorJS :: validatorJS"></script>
+
+<script>
+
+    function clickGuardar(){
+        msj = validarForm();
+        if(msj!=""){
+            alerta(msj);
+            return;
+        }
+        document.formPersonal.submit();
+    }
+    
+    function validarForm(){
+        limpiarEstilos(['usuario','password','password2']);
+        msj = "";
+     
+
+        clave    = document.getElementById('password').value;
+        claveRep = document.getElementById('password2').value;
+        if(clave != claveRep){
+            msj = "Las contraseñas deben coincidir.";
+            ponerEnRojo('password');
+            ponerEnRojo('password2');
+        }
+ 
+
+        msj = validarTamañoMaximoYNulidad(msj,'usuario',200,'Usuario');
+        msj = validarTamañoMaximoYNulidad(msj,'password',200,'Nueva Contraseña');
+        msj = validarTamañoMaximoYNulidad(msj,'password2',200,'Nueva Contraseña repetida');
+        
+        
+        return msj;
+
+    }
+
+</script>
+
+
+</html>

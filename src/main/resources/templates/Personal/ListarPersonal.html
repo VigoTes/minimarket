@@ -70,12 +70,19 @@
                             <td>
                                 
 
-
+                                
                                 <!-- HABILITADO -->
                                 <span th:if="${personal.estaActivo ()}">
+
                                     <a class="btn btn-info btn-xs" th:href="@{'/Personal/Editar/' + ${personal.codPersonal}}">
+                                        Editar Datos
                                         <i class="fas fa-edit"></i>
                                     </a>
+                                    <a class="btn btn-primary btn-xs" th:href="@{'/Personal/EditarUsuario/' + ${personal.codPersonal}}">
+                                        Editar Usuario
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    
                                      
                                     <button class="btn btn-danger btn-xs" type="button" 
                                         th:attr="onclick=${

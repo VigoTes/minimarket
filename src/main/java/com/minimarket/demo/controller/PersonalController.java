@@ -112,6 +112,7 @@ public class PersonalController {
         personal.dni = dni;
         personal.codTipoPersonal = codTipoPersonal;
         personal.codUsuario = user.codUsuario;
+        personal.activo = 1;
         personal.guardar();
         
         ManejadorSesion.addMsj(request, "Se ha creado el Personal '" + personal.gNombreCompleto()  + "'.");
@@ -119,16 +120,9 @@ public class PersonalController {
 	}
 
     @PostMapping("/Actualizar")
-	public ModelAndView  Actualizar(ModelMap  model , HttpServletRequest request, String codPersonal,String codUsuario
+	public ModelAndView  Actualizar(ModelMap  model , HttpServletRequest request, String codPersonal 
 		    ,String nombres,String apellidos, String dni, int codTipoPersonal, String usuario, String password)  throws Exception{
 
-        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
-        String contraseñaEncriptada = bCryptPasswordEncoder.encode(password);
-            
-        Usuario user =  Usuario.findOrFail(codUsuario);
-        user.usuario = usuario;
-        user.password = contraseñaEncriptada;
-        user.guardar();
         
 
         Personal x = Personal.findOrFail(codPersonal);
@@ -178,10 +172,41 @@ public class PersonalController {
 		 
 	}
 	
-	 
 
+
+    /* EDICIÓN DE USUARIO */
 	
+    @GetMapping("/EditarUsuario/{codUsuario}")
+    public String EditarUsuario(Model model, HttpSession session,@PathVariable int codUsuario)  throws Exception {
+		
 
+		Usuario user = Usuario.findOrFail(String.valueOf(codUsuario));
+        model.addAttribute("usuario",user);
+		
+
+		return "Personal/EditarUsuario";
+	}
+
+
+
+    @PostMapping("/ActualizarUsuario")
+	public ModelAndView  ActualizarUsuario(ModelMap  model , HttpServletRequest request, String codUsuario,
+                String usuario, String password,String password2)  throws Exception{
+        
+        
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
+        String contraseñaEncriptada = bCryptPasswordEncoder.encode(password);
+                      
+        
+        Usuario u = Usuario.findOrFail(codUsuario);
+        u.usuario = usuario;
+        u.password = contraseñaEncriptada;
+        u.guardar();
+
+
+        ManejadorSesion.addMsj(request, "Se ha actualizado el Usuario '" + u.usuario + "'.");
+        return new ModelAndView ("redirect:/Personal/Listar", model);
+	}
  
 
 	
