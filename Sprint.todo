@@ -5,7 +5,7 @@ COSAS TÉCNICAS QUE AUN NO SÉ COMO HACER:
     ✔ Obtener empleado logeado @done(05-02-22 17:38)
     ✔ HACER EL LOGIN XD @done(05-02-22 17:38)
     ✔ Imprimir en una vista el emp logeado @done(05-02-22 19:40)
-    ☐ Enviar MSJs a API Telegram
+    ✔ Enviar MSJs a API Telegram @done(09-02-22 01:15)
     
 CONFIG DEL PROYECTO:
     ✔ Linkear clases con tablas @done(05-02-22 17:38)
@@ -21,8 +21,9 @@ CRUDS Básicos:
 CRUDs Achorados:
     ✔ VENTA (con detalles) @done(05-02-22 19:40)
     ✔ Venta chevere XD @done(08-02-22 19:53)
-    ☐ Ver VENTA
+    ✔ Ver VENTA @done(09-02-22 01:15)
     ✔ FACTURA O BOLETA aaaaaaaaaaaaaaa @done(08-02-22 19:53)
     ✔ Ingreso de productos (Lotes) @done(05-02-22 19:40)
     ✔ Personal (usuarios) @done(08-02-22 13:24)
-    
+    ☐ Ver boleta o factura en PDF
+    ☐ Enviar reporte diario a telegram

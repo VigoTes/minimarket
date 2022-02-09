@@ -2,7 +2,7 @@
 body{
 	margin:0;
 	color:#212431;
-	background:url("img/FondoLogin.jpg") no-repeat center;
+	background:url(https://images.pexels.com/photos/2292919/pexels-photo-2292919.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940) no-repeat center;
 	font:600 16px/18px 'Open Sans',sans-serif;
 }
 *,:after,:before{box-sizing:border-box}

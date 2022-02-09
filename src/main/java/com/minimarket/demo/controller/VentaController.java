@@ -209,4 +209,17 @@ public class VentaController {
 
     
     
+    @GetMapping("/Clientes")
+	public String Clientes(Model model, HttpSession session  ) throws Exception {
+         
+        Database db = new Database();
+        List<Cliente> listaClientes = db.results(Cliente.class);
+        db.close();
+
+
+        model.addAttribute("listaClientes",listaClientes); 
+		return "Ventas/ListarClientes";
+	}
+    
+    
 }

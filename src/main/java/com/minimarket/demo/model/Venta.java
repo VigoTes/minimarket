@@ -1,6 +1,7 @@
 package com.minimarket.demo.model;
 
 
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -79,7 +80,43 @@ public class Venta extends ModeloGuardable{
 		
 		return resultados.get(0);	
 	}
+
+	public List<DetalleVenta> obtenerDetalles() throws Exception{
+		Database db = new Database();
+		
+		List<DetalleVenta> resultados = 
+				db.where("codVenta=?", this.codVenta).results(DetalleVenta.class);
+		db.close();
+		if(resultados.size()==0) {
+			throw new Exception("No tiene detalles la venta "+this.codVenta);
+		}
+		
+		return resultados;
+	}
 	
+	public Cliente obtenerCliente() throws Exception{
+		Database db = new Database();
+		
+		List<Cliente> resultados = db.where("codCliente=?", this.codCliente).results(Cliente.class);
+		db.close();
+		if(resultados.size()==0) {
+			throw new Exception("No existe el client "+this.codCliente);
+		}
+		
+		return resultados.get(0);
+	}
+
+	public TipoCDP obtenerTipoCDP() throws Exception{
+		Database db = new Database();
+		
+		List<TipoCDP> resultados = db.where("codTipoCDP=?", this.codTipoCDP).results(TipoCDP.class);
+		db.close();
+		if(resultados.size()==0) {
+			throw new Exception("No existe el tipo de CDP "+this.codTipoCDP);
+		}
+		
+		return resultados.get(0);
+	}
 	  
 
     public Cliente gCliente() throws Exception{
@@ -100,5 +137,13 @@ public class Venta extends ModeloGuardable{
             return cliente.razonSocial;
 
     }
+
+	public String obtenerImporteTotalFormateado() throws Exception{
+		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
+
+		return formato.format(this.importeTotal);
+	}
+
+	
 
 }

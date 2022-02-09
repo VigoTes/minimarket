@@ -1,5 +1,6 @@
 package com.minimarket.demo.model;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -56,7 +57,29 @@ public class DetalleVenta extends ModeloGuardable{
 		
 		return resultados.get(0);	
 	}
+
+	public Producto obtenerProducto() throws Exception{
+		Database db = new Database();
+		
+		List<Producto> resultados = db.where("codProducto=?", this.codProducto).results(Producto.class);
+		db.close();
+		if(resultados.size()==0) {
+			throw new Exception("No existe producto "+this.codProducto);
+		}
+		
+		return resultados.get(0);
+	}
 	
+
+	public String obtenerPrecioUnitarioFormateado() throws Exception{
+		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
+		return formato.format(this.precioUnitario);
+	}
+
+	public String obtenerTotalFormateado() throws Exception{
+		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
+		return formato.format(this.total);
+	}
 	
 	
 	

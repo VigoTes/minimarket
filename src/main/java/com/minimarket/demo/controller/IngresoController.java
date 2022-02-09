@@ -1,5 +1,6 @@
 package com.minimarket.demo.controller;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import librerias.Debug;
 import java.util.Date;
@@ -50,16 +52,34 @@ public class IngresoController {
 	
     
 	@GetMapping("/Listar")
-	public String listarIngresos(Model model, HttpSession session) {
-		
+	public String listarIngresos(Model model, HttpSession session, @Param("fechaInicio") String fechaInicio, @Param("fechaFin") String fechaFin) throws Exception {
+
+		if(fechaInicio==null){
+			fechaInicio = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+			//fechaInicio = "08/02/2022";
+		}
+		if(fechaFin==null){
+			fechaFin = new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+			//fechaFin = "08/02/2022";
+		}
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+		LocalDateTime inicio = LocalDateTime.parse(fechaInicio+" 00:00", formatter);
+		LocalDateTime fin = LocalDateTime.parse(fechaFin+" 00:00", formatter);
+
+		List<IngresoAlmacen> listaIngresos = IngresoAlmacen.filtrarIngresos(inicio, fin);
+		/*
 		Database db = new Database();
 		List<IngresoAlmacen> listaIngresos = db.results(IngresoAlmacen.class);
 		db.close();
-
+		*/
 		model.addAttribute("listaIngresos",listaIngresos);
+		model.addAttribute("fechaInicio",fechaInicio);
+		model.addAttribute("fechaFin",fechaFin);
 		
         
 		model.addAttribute("msj",ManejadorSesion.getMsj(session));
+		//model.addAttribute("msj",inicio.toString()+"  "+fin.toString()+"    "+IngresoAlmacen.verificarFiltro(inicio, fin));
 		return "Ingresos/listar";
 	}
 
@@ -248,5 +268,32 @@ public class IngresoController {
 			
             ManejadorSesion.addMsj(request, "Ingreso editado exitosamente.");
             return new ModelAndView ("redirect:/IngresoAlmacen/Listar", model);
+	}
+
+	@GetMapping("/Ver/{codIngresoAlmacen}")
+	public String verIngreso(Model model, HttpSession sessionl, @PathVariable("codIngresoAlmacen") String codIngresoAlmacen) throws Exception {
+		IngresoAlmacen ingresoAlmacen = IngresoAlmacen.findOrFail(codIngresoAlmacen);
+		/*
+		Database db = new Database();
+		List<Producto> listaProductos = db.results(Producto.class);
+		List<Proveedor> listaProveedores = db.results(Proveedor.class);
+		db.close();
+		*/
+		//PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
+
+		//model.addAttribute("listaProductos",listaProductos);
+		//model.addAttribute("listaProveedores",listaProveedores);
+		model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
+		model.addAttribute("ingresoAlmacen",ingresoAlmacen);
+		model.addAttribute("puntoVenta",ingresoAlmacen.obtenerPuntoVenta());
+		model.addAttribute("lotes",ingresoAlmacen.obtenerLotes());
+		
+
+        //model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
+		//model.addAttribute("json_listaProveedores",JSONER.toJson(listaProveedores));
+		
+		//model.addAttribute("json_listaPersonal",JSONER.toJson(listaPersonal));
+		 
+		return "Ingresos/ver";
 	}
 }

@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import java.sql.Time;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -91,7 +93,38 @@ public class Lote extends ModeloGuardable{
 		return codigoLegible;
 	}
 
+	public Producto obtenerProducto() throws Exception{
+		Database db = new Database();
+		
+		List<Producto> listaProductos = db.where("codProducto=?", this.codProducto).results(Producto.class);
+		db.close();
+		if(listaProductos.size()==0) {
+			throw new Exception("No existe el producto "+this.codProducto);
+		}
+		
+		return listaProductos.get(0);
+	}
 
-	
+	public Proveedor obtenerProveedor() throws Exception{
+		Database db = new Database();
+		
+		List<Proveedor> listaProveedores = db.where("codProveedor=?", this.codProveedor).results(Proveedor.class);
+		db.close();
+		if(listaProveedores.size()==0) {
+			throw new Exception("No existe el proveedor "+this.codProveedor);
+		}
+		
+		return listaProveedores.get(0);
+	}
+
+	public String obtenerCostoFormateado() throws Exception{
+		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
+		return formato.format(this.costoCompraLote);
+	}
+
+	public String obtenerFechaVencimientoFormateada() throws Exception{
+		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+    	return format.format(this.fechaVencimiento);
+	}
 	
 }

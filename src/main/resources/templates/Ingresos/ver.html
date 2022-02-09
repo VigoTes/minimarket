@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      
+        <div class="content-wrapper">
+            <section class="content"> <!--contenido-->
+                <div >
+                    <p class="h1" style="text-align: center">VER INGRESO</p>
+                </div>
+
+                <form method = "GET" action="/IngresoAlmacen/Actualizar" id="frmingreso" name="frmingreso" >           
+                    <div class="container">
+                        <div class="row">           
+                            <div class="col-md" ><!--COLUMNA IZQUIERDA 1-->
+                                <div class="container"><!--OTRO CONTENEDOR DENTRO DE LA CELDA-->
+                                    <div class="row">
+                                        <div  class="colLabel">
+                                                <label for="fecha">Fecha Ingreso:</label>
+                                        </div>
+                                        <div class="col">
+                                            <div  style="width: 100px; " >
+                                                <input type="text" style="margin:0px auth;" class="form-control" name="fechaIngreso" id="fechaIngreso" readonly 
+                                                th:value="${ingresoAlmacen.obtenerFechaIngresoFormateada()}" >     
+                                            </div>
+                                        </div>
+                                      
+                                        <div class="w-100"></div>
+
+                                        <div  class="colLabel">
+                                            <label for="fecha">Punto de venta:</label>
+                                        </div>
+                                        <div class="col">
+                                            <div>
+                                                <input type="text" style="margin:0px auth;" class="form-control" name="puntoVenta" id="puntoVenta" 
+                                                th:value="${puntoVenta.nombre}" disabled >     
+                                            </div>
+                                        </div>
+
+                                        <div class="w-100"></div>
+
+                                        <div  class="colLabel">
+                                            <label for="fecha">Responsable:</label>
+                                        </div>
+                                        <div class="col">
+                                            <div>
+                                                <input type="text" style="margin:0px auth;" class="form-control" name="responsable" id="responsable" 
+                                                th:value="${ingresoAlmacen.obtenerNombresApellidosResponsable()}" disabled >     
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                
+                
+                            <div class="col-md"><!--COLUMNA DERECHA-->
+                                <div style="margin-bottom: 1%">
+                                    <label for="fecha">Comentario: <b id="contador" style="color: rgba(0, 0, 0, 0.548)"></b></label>
+                                    <textarea class="form-control" name="comentario" id="comentario" aria-label="With textarea" th:text="${ingresoAlmacen.comentario}"
+                                         rows="3" readonly></textarea>
+                                </div>
+                                
+                                <div class="container"><!--OTRO CONTENEDOR DENTRO DE LA CELDA-->
+                                    <div class="row">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <!--LISTADO DE DETALLES-->
+                    <div class="col-md-12 pt-3">     
+                        <div class="table-responsive">                           
+                            <table id="detalles" class="table table-striped table-bordered table-condensed table-hover" style='background-color:#FFFFFF;'> 
+                                <thead class="thead-default" style="background-color:#3c8dbc;color: #fff;">
+                                    <th  class="text-center">Cantidad</th>                                        
+                                    <th  class="text-center">Producto</th>                                 
+                                    <th  class="text-center">Proveedor</th>
+                                    <th  class="text-center">Fecha Vencimiento</th>
+                                    <th  class="text-center">Costo</th>                                            
+                                </thead>
+                                <tbody>
+                                    <tr class="selected" th:each="lote : ${lotes}">          
+                                        <td width="10%">            
+                                            <input type="text" class="form-control" th:value="${lote.stockIngresado}" readonly style="text-align: center">
+                                        </td>  
+                                        <td>            
+                                            <input type="text" class="form-control" th:value="${lote.obtenerProducto().nombre}" readonly>
+                                        </td>             
+                                        <td width="25%">               
+                                            <input type="text" class="form-control" th:value="${lote.obtenerProveedor().razonSocial}" readonly>
+                                        </td>             
+                                        <td style="text-align:center;"  width="20%">
+                                            <input type="text" class="form-control" th:value="${lote.obtenerFechaVencimientoFormateada()}" readonly style="text-align: center">
+                                        </td>              
+                                        <td width="10%">              
+                                            <input type="text" class="form-control" th:value="${lote.obtenerCostoFormateado()}" readonly  style="text-align: right">
+                                        </td>                        
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div> 
+                        
+                
+                        <div class="row" id="divTotal">                       
+                            <div class="col-md-8">
+                            </div>   
+                            <div class="col-md-2">                        
+                                <label for="">Total : </label>    
+                            </div>   
+                            <div class="col-md-2">
+                                <!--HIDDEN PARA GUARDAR LA CANT DE ELEMENTOS DE LA TABLA-->
+                                <input type="text" class="form-control text-right" name="totalMostrado" id="totalMostrado" th:value="${ingresoAlmacen.obtenerCostoTotalFormateado()}" readonly>   
+                                                            
+                            </div>   
+                        </div>  
+                    </div> 
+                        
+                    <br>
+
+                    <div class="row">
+                
+                        <div class="col">
+                            
+                            <a th:href="@{/IngresoAlmacen/Listar}" class='btn btn-info'>
+                                <i class="fas fa-arrow-left"></i> 
+                                Regresar al Menu
+                            </a>  
+                
+                        </div>
+                
+                        <div class="col"></div>
+
+                        <div class="col" id="divEnteroArchivo">            
+  
+                        </div>    
+                
+                        <div class="col text-center">  
+                            <div id="guardar">
+                                <div class="form-group">
+     
+                                </div>    
+                            </div>
+                        </div>
+                   
+                        
+                    </div>
+                </form>
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <style th:replace="Layout/EstilosPegados :: estilosPegados"></style>
+    <script th:replace="Layout/ValidatorJS :: validatorJS"></script>
+
+    <script>
+        var f = new Date();
+        //document.getElementById("fechaIngreso").value = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
+    </script>
+    <script type="application/javascript">
+        //se ejecuta cada vez que escogewmos un file
+    
+            //var cont=0;
+            //var total=0;
+            //var detallesGuardados=[(${json_detallesGuardados})];
+            //var lote=[];
+            //var listaProductos = [(${json_listaProductos})];
+            //var listaProveedores = [(${json_listaProveedores})];
+
+            
+            $(document).ready(function(){
+                /*
+                var now = new Date();
+
+                var day = ("0" + now.getDate()).slice(-2);
+                var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+                var today = (day)+"/"+(month)+"/"+now.getFullYear();
+                $("#fechaIngreso").val(today);
+                
+                //document.getElementById("comentario").value=comentario+"xx";
+                var fecha;
+                for (let index = 0; index < detallesGuardados.length; index++) {   
+                    fecha = new Date(detallesGuardados[index].fechaVencimiento); 
+                    lote.push({
+                        cantidad:detallesGuardados[index].stockIngresado,
+                        producto:listaProductos.find(m => m.codProducto == detallesGuardados[index].codProducto),
+                        proveedor:listaProveedores.find(m => m.codProveedor == detallesGuardados[index].codProveedor),         
+                        fechaVencimiento: fecha.toLocaleDateString(),
+                        costo:detallesGuardados[index].costoCompraLote
+                    });
+                }
+                cont = detallesGuardados.length;
+                actualizarTabla();
+
+                contadorCaracteres('comentario','contador','200');
+                */
+            });
+        
+    </script>
+
+</body>
+
+</html>

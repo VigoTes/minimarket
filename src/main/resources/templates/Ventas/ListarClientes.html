@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                
+                
+                <div th:replace="Layout/Mensaje"></div>
+	            
+                <span >
+
+                </span>
+                <div class="row m-1">
+
+                    <h3>
+                        Lista de clientes
+                    </h3>
+                    
+                </div>
+
+                <table class="m-3 table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                DNI
+                            </th>
+                            <th>
+                                Nombres
+                            </th>
+                            <th>
+                                RUC
+                            </th>
+                            <th>
+                                Razon Social
+                            </th>
+                            
+
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr th:each="cliente : ${listaClientes}"   >
+                            <td  th:text="${cliente.dni}">
+                             
+                            </td>
+                            <td  th:text="${cliente.gNombreCompleto()}">
+                             
+                            </td>
+ 
+                            <td th:text="${cliente.ruc}">
+                             
+                            </td> 
+                            <td th:text="${cliente.razonSocial}">
+                             
+                            </td>
+
+                        </tr>
+                    </tbody>
+                    
+                </table>
+                
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <style>
+        .rojo{
+            background-color: rgba(211, 136, 136, 0.445);
+        }
+
+    </style>
+</body>
+</html>

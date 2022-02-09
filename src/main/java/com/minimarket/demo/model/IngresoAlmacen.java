@@ -117,5 +117,34 @@ public class IngresoAlmacen extends ModeloGuardable{
 		return formato.format(this.costoTotal);
 	}
 	
+	public static List<IngresoAlmacen> filtrarIngresos(LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin) throws Exception{
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		String inicio=fechaHoraInicio.format(dtf);
+		String fin=fechaHoraFin.format(dtf);
+
+		List<IngresoAlmacen> listaIngresos;
+		Database db = new Database();
+		if(fechaHoraInicio.isBefore(fechaHoraFin) && !inicio.equals(fin)){
+			listaIngresos = db.where("fechaHoraIngreso>? and fechaHoraIngreso<?", inicio, fin).results(IngresoAlmacen.class);
+		}
+		else{
+			listaIngresos = db.results(IngresoAlmacen.class);
+		}
+		db.close();
+		return listaIngresos;
+	}
+
 	
+	public static String verificarFiltro(LocalDateTime fechaHoraInicio, LocalDateTime fechaHoraFin) throws Exception{
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+		String inicio=fechaHoraInicio.format(dtf);
+		String fin=fechaHoraFin.format(dtf);
+
+		if(fechaHoraInicio.isBefore(fechaHoraFin) && !inicio.equals(fin)){
+			return "se filtra";
+		}
+		return "no se filtra";
+	}
+	
+
 }
