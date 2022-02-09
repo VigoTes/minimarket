@@ -92,7 +92,7 @@ public class MaracsoftBot {
             String respuestaGET = MaracsoftBot.consultaGET(linkConsulta);
             
             if( respuestaGET.contains("\"success\":false")){
-                return "0";
+                return "{\"ok\":\"0\"}";
             }
 
             //LLEGA ASI
@@ -109,13 +109,15 @@ public class MaracsoftBot {
                             + " " + 
                             objeto.get("apellidoMaterno").toString() 
                         ));
+            nuevo.put("ok","1");
 
 
             return nuevo.toString();
 
         } catch (Exception ex) {
             Debug.print(ex.toString());
-            return "0";
+            return "{\"ok\":\"0\"}";
+
         }
 
     }

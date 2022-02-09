@@ -44,6 +44,12 @@
                         <!-- FORM PARA NATURAL -->
                         <div id="divNatural" class="row m-2">
                             <input type="number" style="width:20%" class="m-1 form-control" id="dni" name="dni" placeholder="DNI">
+
+                            <button class="btn btn-success btn-xs" type="button" onclick="consultarPorDNI()">
+                                <i class="fas fa-search"></i>
+
+                            </button>
+
                             <input type="text" style="width: 30%;" class="m-1 form-control" id="nombres" name="nombres" placeholder="Nombres" readonly >
                             <input type="text" style="width: 30%;" class="m-1 form-control" id="apellidos" name="apellidos" placeholder="Apellidos" readonly >
                              
@@ -539,8 +545,8 @@
 
             msjError="";
 
-            msjError = validarTamañoExacto(msjError,'DNI',8,'DNI');
-            msjError = validarNulidad(msjError,'DNI','DNI');
+            msjError = validarTamañoExacto(msjError,'dni',8,'DNI');
+            msjError = validarNulidad(msjError,'dni','DNI');
             
 
             if(msjError!=""){
@@ -550,28 +556,26 @@
 
 
             $(".loader").show();//para mostrar la pantalla de carga
-            dni = document.getElementById('DNI').value;
+            dni = document.getElementById('dni').value;
 
-            $.get('/ConsultarAPISunat/dni/'+dni,
+            $.get('/Ventas/ConsultarPorDNI/'+dni,
             function(data)
             {     
                 console.log("IMPRIMIENDO DATA como llegó:");
                 
                 data = JSON.parse(data);
-                  
                 console.log(data);
-                persona = data.datos;
+                if(data.ok == "1"){
+                    alertaMensaje("Se ha encontrado exitosamente a la persona","¡Enhorabuena!","info");
+                    document.getElementById('nombres').value   = data.nombres; 
+                    document.getElementById('apellidos').value =  data.apellidos;
+                }else{
+                    alertaMensaje("No se encontró exitosamente a la persona","Error","warning");
 
-                alertaMensaje(data.mensaje,data.titulo,data.tipoWarning);
-
-                if(data.ok==1){
-                    document.getElementById('nombres').value   = persona.nombres; 
-                    document.getElementById('apellidos').value =  persona.apellidoPaterno + " " + persona.apellidoMaterno;
-
-
-                    
 
                 }
+ 
+ 
              
                 $(".loader").fadeOut("slow");
             }
