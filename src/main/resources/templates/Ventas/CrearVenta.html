@@ -13,21 +13,50 @@
                 <div class="loader" id="pantallaCarga"></div>
 
                  <div class="container">
-                    <form id="formVenta" name="formVenta" action="/Ventas/Guardar" method="GET">
-                            
-                        <div class="row m-2">
-                            
-                            
-                            <input type="number" style="width:20%" class="m-1 form-control" id="dni" name="dni" placeholder="DNI">
-                           
+                    
+                    
 
+                    <form id="formVenta" name="formVenta" action="/Ventas/Guardar" method="GET">
+                        <input type="hidden" id="codCliente" name="codCliente">
+
+                        <div class="row">
+                            <div class="col">
+                                <label for="">Tipo cliente:</label>
+                                <select class="form-control" name="codTipoCliente" id="codTipoCliente" onchange="cambioTipoCliente()">
+                                    <option value="1">Persona Natural</option>
+                                    <option value="2">Persona Juridica</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <label for="">Comprobante</label>
+                                <select class="form-control" name="codTipoCDP" id="codTipoCDP" >
+                                    <option value="1">Boleta</option>
+                                    <option value="2">Factura</option>
+                                </select>
+                            </div>
+                           
+    
+    
+                        </div>
+                       
+
+
+                        <!-- FORM PARA NATURAL -->
+                        <div id="divNatural" class="row m-2">
+                            <input type="number" style="width:20%" class="m-1 form-control" id="dni" name="dni" placeholder="DNI">
                             <input type="text" style="width: 30%;" class="m-1 form-control" id="nombres" name="nombres" placeholder="Nombres" readonly >
                             <input type="text" style="width: 30%;" class="m-1 form-control" id="apellidos" name="apellidos" placeholder="Apellidos" readonly >
                              
-                            <button type="button" class="btn btn-success btn-sm"> 
-                                Nuevo Cliente
-                            </button>       
+                            
     
+                        </div>
+
+                        <!-- FORM PARA JURIDICA -->
+                        <div id="divJuridica" class="row m-2" hidden>
+
+                            <input type="number" style="width:20%" class="m-1 form-control" id="ruc" name="ruc" placeholder="RUC">
+                            <input type="text" style="width: 30%;" class="m-1 form-control" id="razonSocial" name="razonSocial" placeholder="Razón Social" readonly>
+
                         </div>
                         
                         <div class="row">
@@ -112,7 +141,7 @@
                                                         <td class="text-right fontSize11">
                                                             Total:
                                                         </td>
-                                                        <td class="text-right fontSize11" id="totalMostrado"></td>
+                                                        <td class="text-right fontSize11" id="totalMostrado">0.00</td>
                                                         <td></td>
                                                         
                                                     </tr>
@@ -136,7 +165,7 @@
                         <div class="row m-4">
     
                             <div class="col text-left">
-                                <a class="btn btn-primary" href="">
+                                <a class="btn btn-primary" href="/Ventas/Listar">
                                     
                                     <i class="fas fa-backward"></i>
                                     Menú principal
@@ -180,15 +209,115 @@
 
     var productoSeleccionado;
     var cantidadSeleccionada = 0;
-
+    var dni_tamañoAnterior = 0;
+    var ruc_tamañoAnterior = 0;
     
     $(document).ready(function(){
-        iniciarIdentificadorClientes();
+        setInterval( buscarClienteNaturalPorDNI, 0500); // iniciarIdentificadorClientesNaturales
+        setInterval( buscarClienteJuridicoPorRUC, 0500); // iniciarIdentificadorClientesJuridicos
+         
+        
         $(".loader").fadeOut("slow");
     });
 
+    
 
-    function iniciarIdentificadorClientes() {
+    function buscarClienteNaturalPorDNI(){
+        
+        dni = document.getElementById('dni').value;
+
+        tamañoActual = dni.length;
+   
+
+         //Si está escribiendo y llega al 8
+        if(tamañoActual==8 && dni_tamañoAnterior !=8){
+            console.log("Entro al bucle");
+            lista = listaClientes.filter(element => element.dni == dni)
+            if(lista.length>0){ //si lo encontró
+                clienteEncontrado = lista[0];
+                console.log(clienteEncontrado)
+                document.getElementById('nombres').value = clienteEncontrado.nombres;
+                document.getElementById('apellidos').value = clienteEncontrado.apellidos;
+                document.getElementById('codCliente').value = clienteEncontrado.codCliente;
+                desactivarEdicionCliente();
+                
+            }else{ // NO SE ENCONTRÓ AL CLIENTE
+                document.getElementById('nombres').value = "";
+                document.getElementById('apellidos').value = "";
+                document.getElementById('codCliente').value = "0";
+                activarEdicionCliente();
+            }
+        }
+
+        //si se está borrando, que se limpie todo
+        if(tamañoActual!=8 && dni_tamañoAnterior == 8){
+            document.getElementById('nombres').value = "";
+            document.getElementById('apellidos').value = "";
+            document.getElementById('codCliente').value = "0";
+        }
+
+        dni_tamañoAnterior = tamañoActual;
+
+    }
+
+    function buscarClienteJuridicoPorRUC() {
+        ruc = document.getElementById('ruc').value;
+        
+        tamañoActual = ruc.length;
+         //Si está escribiendo y llega al 8
+        if(tamañoActual==11 && ruc_tamañoAnterior !=11){
+            console.log("Entro al bucle");
+            lista = listaClientes.filter(element => element.ruc == ruc)
+            if(lista.length>0){ //si lo encontró
+                clienteEncontrado = lista[0];
+                console.log(clienteEncontrado)
+                document.getElementById('razonSocial').value = clienteEncontrado.razonSocial;
+                document.getElementById('codCliente').value = clienteEncontrado.codCliente;
+
+                desactivarEdicionCliente();
+                
+            }else{ // NO SE ENCONTRÓ AL CLIENTE
+                document.getElementById('razonSocial').value = "";
+                document.getElementById('codCliente').value = "0";
+                activarEdicionCliente();
+            }
+        }
+
+        //si se está borrando, que se limpie todo
+        if(tamañoActual!=11 && ruc_tamañoAnterior == 11){
+            document.getElementById('razonSocial').value = "";
+            document.getElementById('codCliente').value = "0";
+        }
+
+        ruc_tamañoAnterior = tamañoActual;
+        
+             
+
+        
+    
+    
+    }
+
+
+    /* Activan en ambos forms, en el de PN y PJ */
+    function desactivarEdicionCliente(){
+        document.getElementById('nombres').readOnly = true;
+        document.getElementById('apellidos').readOnly = true;
+        document.getElementById('razonSocial').readOnly = true;
+
+    }
+    function activarEdicionCliente(){
+        document.getElementById('nombres').readOnly = false;
+        document.getElementById('apellidos').readOnly = false;
+        document.getElementById('razonSocial').readOnly = false;
+        
+    }
+
+    
+
+
+    
+    function iniciarIdentificadorClientesNaturales() {
         
         setInterval(function(){
              
@@ -200,9 +329,15 @@
                     console.log(clienteEncontrado)
                     document.getElementById('nombres').value = clienteEncontrado.nombres;
                     document.getElementById('apellidos').value = clienteEncontrado.apellidos;
-                }else{
+                    document.getElementById('codCliente').value = clienteEncontrado.codCliente;
+                    limpiarEstilos(['nombres','apellidos']);
+                    desactivarEdicionCliente();
+                    
+                }else{ // NO SE ENCONTRÓ AL CLIENTE
                     document.getElementById('nombres').value = "";
                     document.getElementById('apellidos').value = "";
+                    document.getElementById('codCliente').value = "0";
+                    activarEdicionCliente();
                 }
                 
             }
@@ -213,6 +348,24 @@
     }
 
 
+
+    function cambioTipoCliente(){
+
+        if(document.getElementById('codTipoCliente').value == '1'){ //nat
+            console.log("Seleccionada tipo NATURAL");
+            divNatural.hidden = false;
+            divJuridica.hidden = true;
+        }else{ //jur
+            console.log("Seleccionada tipo JURIDICA");
+            divNatural.hidden = true;
+            divJuridica.hidden = false;
+        }
+
+    }
+    
+     
+    
+    
     function clickGuardar(){
         msj = validarForm();
         if(msj!=""){
@@ -223,13 +376,22 @@
     }
     
     function validarForm(){
-        limpiarEstilos(['dni','nombres']);
+        limpiarEstilos(['dni','nombres','apellidos','razonSocial','ruc']);
 
         msj = "";
 
-        msj = validarTamañoMaximoYNulidad(msj,'dni',200,'DNI');
-        msj = validarTamañoMaximoYNulidad(msj,'nombres',100,'Nombres y apellidos');
- 
+        if(document.getElementById('codTipoCliente').value == 1)//PERSONA NAT
+        {
+            msj = validarTamañoMaximoYNulidad(msj,'dni',200,'DNI');
+            msj = validarTamañoMaximoYNulidad(msj,'nombres',100,'Nombres');
+            msj = validarTamañoMaximoYNulidad(msj,'apellidos',100,'Apellidos');
+        }else{ //JURIDICA
+            msj = validarTamañoMaximoYNulidad(msj,'ruc',200,'RUC');
+            msj = validarTamañoMaximoYNulidad(msj,'razonSocial',100,'Razón Social');
+        }
+        
+        if(listaDetalles.length==0)
+            msj = "Debe añadir productos.";
 
         return msj;
 
@@ -259,8 +421,9 @@
         //console.log(productoSeleccionado.precioActual);
         //console.log(cantidadSeleccionada);
         
-        document.getElementById('subTotal').value  = parseFloat(productoSeleccionado.precioActual) * parseFloat(cantidadSeleccionada); 
-
+        document.getElementById('subTotal').value  = number_format(
+            parseFloat(productoSeleccionado.precioActual) * parseFloat(cantidadSeleccionada) 
+        ,2);
     }
 
 
@@ -357,7 +520,7 @@
                 producto : productoSeleccionado,
                 producto_codigo : productoSeleccionado.codProducto, //añado esto para el backend
                 cantidad : document.getElementById('cantidad').value,
-                subTotal : cantidad * parseFloat(productoSeleccionado.precioActual)
+                subTotal : number_format(cantidad * parseFloat(productoSeleccionado.precioActual),2)
 
             });        
             

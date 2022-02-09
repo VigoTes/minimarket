@@ -35,6 +35,9 @@ public class Venta extends ModeloGuardable{
     @Column(name="codPersonal")
 	public int codPersonal;
 
+    @Column(name="codTipoCDP")
+	public int codTipoCDP;
+
     @Column(name="importeTotal")
     public float importeTotal;
     @Column(name="igv")
@@ -43,11 +46,10 @@ public class Venta extends ModeloGuardable{
     @Column(name="importeBruto")
     public float importeBruto;
     
-    
-
+   
  
-	@Column(name="dni")
-	public String dni;
+	@Column(name="codCliente")
+	public int codCliente;
 
 	
     @Column(name="fechaHora")
@@ -79,5 +81,24 @@ public class Venta extends ModeloGuardable{
 	}
 	
 	  
+
+    public Cliente gCliente() throws Exception{
+        return Cliente.findOrFail(String.valueOf(this.codCliente));
+    }
+    public TipoCDP gTipoCDP() throws Exception{
+        return TipoCDP.findOrFail(String.valueOf(this.codTipoCDP));
+    }
+
+
+    public String gClienteDescripcion() throws Exception{
+        Cliente cliente = this.gCliente();
+         
+        if(cliente.codTipoCliente==1)//nat
+            return cliente.gNombreCompleto();
+
+        else 
+            return cliente.razonSocial;
+
+    }
 
 }

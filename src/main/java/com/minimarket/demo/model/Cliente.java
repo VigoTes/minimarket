@@ -29,8 +29,20 @@ public class Cliente extends ModeloGuardable{
 	public String nombres;
     @Column(name="apellidos")
 	public String apellidos;
-	
-	
+    @Column(name="codTipoCliente")
+	public int codTipoCliente;
+
+   
+
+     
+
+
+	@Column(name="ruc")
+	public String ruc;
+	@Column(name="razonSocial")
+	public String razonSocial;
+
+
 	public Cliente() {
 		super();
 	}
@@ -56,6 +68,8 @@ public class Cliente extends ModeloGuardable{
         return this.apellidos  +" " + this.nombres ;
     }
 	
-	
+	public TipoCliente gTipoCliente() throws Exception{
+        return TipoCliente.findOrFail(String.valueOf(this.codTipoCliente));
+    }
 	
 }

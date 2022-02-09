@@ -33,12 +33,23 @@
                             <th>
                                 Código
                             </th>
-                          
                             <th>
                                 Cliente
                             </th>
                             <th>
+                                TipoCliente
+                            </th>
+                            <th>
+                                Tipo Venta
+                            </th>
+                            <th>
                                 Fecha hora
+                            </th>
+                            <th>
+                                T.Bruto
+                            </th>
+                            <th>
+                                Igv
                             </th>
                             <th>
                                 Total
@@ -54,12 +65,25 @@
                             <td  th:text="${venta.codigoLegible}">
                              
                             </td>
-                            <td th:text="${venta.dni}">
+                            <td th:text="${venta.gClienteDescripcion()}">
                              
+                            </td>
+                            <td th:text="${venta.gCliente().gTipoCliente().nombre}">
+
+                            </td>
+                            <td th:text="${venta.gTipoCDP().nombre}">
+                                
                             </td>
                             <td th:text="${venta.fechaHora}">
                              
                             </td>
+                            <td th:text="${venta.importeBruto}">
+
+                            </td>
+                            <td th:text="${venta.igv}">
+
+                            </td>
+                            
                             <td th:text="${venta.importeTotal}">
                              
                             </td>

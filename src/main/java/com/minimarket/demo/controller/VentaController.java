@@ -55,12 +55,10 @@ public class VentaController {
 	public ModelAndView Listar(Model model, HttpSession session) {
 		
 		Database db = new Database();
-		List<Venta> listaVentas = db.results(Venta.class);
+		List<Venta> listaVentas = db.orderBy("codigoLegible DESC").results(Venta.class);
 		model.addAttribute("listaVentas",listaVentas);
 		
 		db.close();
-		
-		
 		
 		model.addAttribute("msj",ManejadorSesion.getMsj(session));
 		return new ModelAndView("Ventas/ListarVentas");
@@ -93,10 +91,30 @@ public class VentaController {
 	 
     // ME QUEDÉ AQUI TRATANDO DE ITERAR ESTE OBJETO JSON 
 	@GetMapping("/Guardar")
-	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request
-		                        ,String json_detalles,  String dni) throws Exception {
+	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request, String dni , String nombres,String apellidos
+            ,String ruc , String razonSocial,int codTipoCDP, int codTipoCliente ,String json_detalles,  String codCliente) throws Exception {
                                     
-		
+            
+            Cliente cliente;
+            //Si no llegó un dato cliente, creamos uno nuevo
+            if(codCliente.equals("0")){
+                cliente = new Cliente();
+                cliente.nombres = nombres;
+                cliente.apellidos = apellidos;
+                cliente.dni = dni;
+
+                cliente.ruc = ruc;
+                cliente.razonSocial = razonSocial;
+                cliente.codTipoCliente = codTipoCliente;
+                
+                cliente.guardar();
+                cliente.codCliente = cliente.gUltimaID(); //ya que el ORM no inserta en el obj el nuevo id generado, lo hago manual
+                
+            }else
+                cliente = Cliente.findOrFail(codCliente);
+
+                
+            Debug.print("El id es" + cliente.codCliente);
             Debug.print(json_detalles);
             
             JSONArray array = new JSONArray(json_detalles);
@@ -107,10 +125,13 @@ public class VentaController {
             venta.importeBruto = 0;
             venta.importeTotal = 0;
             venta.igv = 0;
-            venta.dni = dni;
+            venta.codTipoCDP = codTipoCDP;
+            venta.codCliente = cliente.codCliente;
             venta.fechaHora = LocalDateTime.now();
-            venta.codigoLegible = "V2521";
+            venta.codigoLegible = "";
             venta.guardar();
+            
+            venta.codigoLegible = "V"+ LocalDateTime.now().getYear()+"-"+ Debug.rellenarConCeros(venta.codVenta, 6);
             
             float total = 0;
             int codProducto;
@@ -139,8 +160,8 @@ public class VentaController {
             }
             
             venta.importeTotal = total;
-            venta.igv = (float) (total / 1.18);
-            venta.importeBruto = venta.importeTotal - venta.importeBruto;
+            venta.importeBruto = Math.round((float) (total / 1.18));
+            venta.igv = venta.importeTotal - venta.importeBruto;
             venta.guardar();
            
 

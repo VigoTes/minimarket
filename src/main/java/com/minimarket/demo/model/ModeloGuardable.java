@@ -41,11 +41,7 @@ public class ModeloGuardable {
 	//ESTAS DOS FUNCIONES SON PARA LLAMAR A LOS ATRIBUTOS ESTÁTICOS DE LA CLASE HIJO
 	public String idColumnName() {
 		try {
-			
-			
 			return this.getClass().getField("idColumnName").get(null).toString();
-			
-			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -121,10 +117,19 @@ public class ModeloGuardable {
 			db.update(this);
 		}
 
+        
+
 		db.close();
 	}
 	
-	 
+
+    //obtiene la ultima ID generada de esta tabla
+	public int gUltimaID(){
+        Database db = new Database();
+        Integer x = db.sql("select "+idColumnName()+" from "+tableName()+" order by "+idColumnName()+" desc").first(Integer.class);
+        db.close();
+        return x;
+    }
 	
 	public int eliminar() {
 		String nombrePK = idColumnName();
