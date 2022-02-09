@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                <div th:replace="Layout/Mensaje"></div>
+                 
+                <form id="formPassword" name="formPassword" th:action="@{/Personal/GuardarCambiarMiClave}" method="POST">
+                    <input type="hidden" id="codUsuario" name="codUsuario" th:value="${usuario.codUsuario}">
+                    <div class="row ml-5 mr-5 mt-4">
+                         
+                         
+
+                        <div class="col">
+                            <label for="">Usuario</label>
+                            <input type="text" class="form-control" readonly name="" th:value="${usuario.usuario}">
+                        </div>
+
+                        
+                        <div class="w-100"></div>
+                        <div class="col">
+                            <label for="">Contraseña Actual</label>
+                            <input type="password" class="form-control" id="password" name="password"  placeholder="Contraseña">
+                        </div>
+                        <div class="col">
+                            <label for="">Repetir Contraseña actual</label>
+                            <input type="password" class="form-control" id="password2" name="password2" placeholder="Repetir contraseña">
+                        </div>
+
+
+                        <div class="w-100"></div>
+                        <div class="col">
+                            <label for="">Nueva Contraseña</label>
+                            <input type="password" class="form-control" id="nueva_password" name="nueva_password"  placeholder="Nueva contraseña">
+                        </div>
+                        <div class="col">
+                            <label for="">Repetir nueva Contraseña</label>
+                            <input type="password" class="form-control" id="nueva_password2" name="nueva_password2" placeholder="Repetir nueva contraseña">
+                        </div>
+                        <div class="w-100"></div>
+
+                        <div class="col">
+
+
+                            <div class="row m-4">
+  
+                                <div class="col text-right">
+        
+                                    <button class="btn btn-primary" type="button" onclick="clickGuardar()">
+                                        <i class="fas fa-save"></i>
+                                        Guardar
+                                    </button>
+        
+                                </div>
+        
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                    
+                </form>
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+</body>
+
+<script th:replace = "Layout/ValidatorJS :: validatorJS"></script>
+
+<script>
+
+    function clickGuardar(){
+        msj = validarForm();
+        if(msj!=""){
+            alerta(msj);
+            return;
+        }
+        document.formPassword.submit();
+    }
+    
+    function validarForm(){
+        limpiarEstilos(['password','password2','nueva_password','nueva_password2']);
+        msj = "";
+     
+
+        clave    = document.getElementById('password').value;
+        claveRep = document.getElementById('password2').value;
+        
+        
+        nuevaClave    = document.getElementById('nueva_password').value;
+        nuevaClaveRep = document.getElementById('nueva_password2').value;
+        
+        if(clave != claveRep){
+            msj = "Las contraseñas actuales deben coincidir.";
+            ponerEnRojo('password');
+            ponerEnRojo('password2');
+        }
+
+
+        if(nuevaClave != nuevaClaveRep){
+            msj = "Las nuevas contraseñas deben coincidir.";
+            ponerEnRojo('nueva_password');
+            ponerEnRojo('nueva_password2');
+        }
+        
+ 
+        msj = validarTamañoMaximoYNulidad(msj,'password',200,'Contraseña Actual');
+        msj = validarTamañoMaximoYNulidad(msj,'password2',200,' Contraseña Actual repetida');
+        
+        msj = validarTamañoMaximoYNulidad(msj,'nueva_password',200,'Nueva Contraseña');
+        msj = validarTamañoMaximoYNulidad(msj,'nueva_password2',200,'Nueva Contraseña repetida');
+        
+        
+        return msj;
+
+    }
+
+</script>
+
+
+</html>

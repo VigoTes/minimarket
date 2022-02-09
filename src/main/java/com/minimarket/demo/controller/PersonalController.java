@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -208,6 +209,47 @@ public class PersonalController {
         return new ModelAndView ("redirect:/Personal/Listar", model);
 	}
  
+
+
+    @GetMapping("/CambiarMiClave")
+	public String CambiarMiClave(Model model, HttpSession session) throws Exception{
+		
+        Usuario usuario  = ManejadorSesion.getPersonalLogeado(session).gUsuario();
+
+		model.addAttribute("usuario",usuario);
+		
+
+		model.addAttribute("msj",ManejadorSesion.getMsj(session));
+		return "Personal/CambiarMiContraseña";
+	}
+
+    @PostMapping("/GuardarCambiarMiClave")
+	public ModelAndView GuardarCambiarMiClave(ModelMap model, HttpSession session, HttpServletRequest request,
+        String password,String password2,String nueva_password,String nueva_password2) throws Exception{
+           
+            
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(4);
+        Usuario usuario  = ManejadorSesion.getPersonalLogeado(session).gUsuario();
+        
+        if(bCryptPasswordEncoder.matches(password, usuario.password)) //verificamos si la contraseña es la correcta
+        {
+
+            //encriptamos la nueva
+            String contraseñaEncriptada = bCryptPasswordEncoder.encode(nueva_password);
+            usuario.password = contraseñaEncriptada;
+            usuario.guardar(); 
+            ManejadorSesion.addMsj(request, "Se ha actualizado el su contraseña.");
+
+        }else{
+            ManejadorSesion.addMsj(request, "La contraseña actual ingresada no es correcta.");
+        }
+
+		
+        
+        return new ModelAndView ("redirect:/Personal/CambiarMiClave", model);
+		 
+	}
+
 
 	
 }
