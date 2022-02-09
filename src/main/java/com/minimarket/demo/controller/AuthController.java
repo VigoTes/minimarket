@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dieselpoint.norm.Database;
 import java.time.LocalDateTime;
@@ -131,13 +132,27 @@ public class AuthController {
     
 
     @GetMapping("/probandoCosas")
+    @ResponseBody //para retornar no una vista sino contenido
     public String probandoCosas(Model model, HttpSession session) throws Exception{
             
-        String info = MaracsoftBot.ConsultarAPISunatDNI("71208489");
-        //String info = "DIEGO VIGO";
-        model.addAttribute("var", info);
+        //REPORTE GENERAL
         
-        return "prueba";
+        //Monto total vendido en el día
+        Cliente cliente = Cliente.findOrFail("2");
+
+        if(cliente.esNatural()){
+			return "SIiiii";
+		}
+		return "NOooo";
+    }
+
+    @GetMapping("/probandoCosas2")
+    @ResponseBody //para retornar no una vista sino contenido
+    public String probandoCosas2(Model model, HttpSession session) throws Exception{
+
+        
+        return Lote.getLoteAVender(4, 1).obtenerFechaVencimientoFormateada();
+
     }
 
 

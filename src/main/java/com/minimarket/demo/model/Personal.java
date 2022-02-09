@@ -14,6 +14,8 @@ import com.dieselpoint.norm.Database;
 
 import com.minimarket.demo.model.PuntoVenta;
 import com.minimarket.demo.model.TipoPersonal;
+
+import librerias.Debug;
  
 @Table(name = "personal")
 public class Personal extends ModeloGuardable{
@@ -80,8 +82,13 @@ public class Personal extends ModeloGuardable{
 
 	public PuntoVenta obtenerPuntoVenta() throws Exception {
 		Database db = new Database();
-		List<PuntoVenta> puntosVenta = db.where("codPersonalCajero=?",this.codPersonal).results(PuntoVenta.class);
-		db.close();
+        //List<PuntoVenta> puntosVenta = db.sql("select * from punto_venta where codPersonalCajero = "+this.codPersonal+" and  activo = 1").results(PuntoVenta.class);
+        //El ORM que estamos usando no permite doble WHERE :c
+        //UPDATE : SI LO PERMITE PERO DE ESTA MANERA XD
+	    List<PuntoVenta> puntosVenta = db.where("codPersonalCajero=? and activo=?",this.codPersonal,1).results(PuntoVenta.class);
+        
+        Debug.print("El tamaño es " + puntosVenta.size());
+        db.close();
 
 		if(puntosVenta.size()==0) {
 			throw new Exception("No ningun punto de venta con el personal "+this.codPersonal);
@@ -121,4 +128,8 @@ public class Personal extends ModeloGuardable{
         return "Deshabilitado";
     }
 	
+
+    public String texto(){
+        return "menuCuenta";
+    }
 }

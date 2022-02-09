@@ -77,7 +77,9 @@ public class Lote extends ModeloGuardable{
 		return resultados.get(0);	
 	}
     
-
+    public IngresoAlmacen gIngreso() throws Exception{
+        return IngresoAlmacen.findOrFail(String.valueOf(this.codIngresoAlmacen));
+    }
     
 	public String obtenerCodigoLegible() throws Exception{
 		String codigoLegible;
@@ -94,27 +96,18 @@ public class Lote extends ModeloGuardable{
 	}
 
 	public Producto obtenerProducto() throws Exception{
-		Database db = new Database();
 		
-		List<Producto> listaProductos = db.where("codProducto=?", this.codProducto).results(Producto.class);
-		db.close();
-		if(listaProductos.size()==0) {
-			throw new Exception("No existe el producto "+this.codProducto);
-		}
-		
-		return listaProductos.get(0);
+        return Producto.findOrFail(String.valueOf(this.codProducto));
+ 
 	}
 
+    public PuntoVenta gPunto() throws Exception {
+        return PuntoVenta.findOrFail(String.valueOf(this.codPunto));
+    }
+
 	public Proveedor obtenerProveedor() throws Exception{
-		Database db = new Database();
-		
-		List<Proveedor> listaProveedores = db.where("codProveedor=?", this.codProveedor).results(Proveedor.class);
-		db.close();
-		if(listaProveedores.size()==0) {
-			throw new Exception("No existe el proveedor "+this.codProveedor);
-		}
-		
-		return listaProveedores.get(0);
+        return Proveedor.findOrFail(String.valueOf(this.codProveedor));
+ 
 	}
 
 	public String obtenerCostoFormateado() throws Exception{
@@ -127,4 +120,15 @@ public class Lote extends ModeloGuardable{
     	return format.format(this.fechaVencimiento);
 	}
 	
+
+    public static Lote getLoteAVender(int codProducto, int codPunto){
+        Database db = new Database();
+        //QUE APAREZCAN ARRIBA LAS QUE TIENEN MENOR FECHA VENCIMIENTO (se vencerán pronto)
+        List<Lote> lotes = db.where("codProducto=? and codPunto=?",codProducto,codPunto)
+            .orderBy("fechaVencimiento ASC").results(Lote.class);
+        db.close();
+        Lote lote = lotes.get(0);
+        return lote;
+
+    }
 }

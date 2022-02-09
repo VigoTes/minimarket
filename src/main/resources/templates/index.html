@@ -186,8 +186,8 @@ xmlns:th="http://www.thymeleaf.org"
                     </span>
                 </a>
                 
-                  <label for="" style="color: rgb(255, 255, 255)">
-                    Administrador
+                  <label th:text="${personalLogeado.gTipoPersonal().nombre}" for="" style="color: rgb(255, 255, 255)">
+                    
                   </label>
         
               </div>
@@ -197,7 +197,7 @@ xmlns:th="http://www.thymeleaf.org"
         
   <!-- Sidebar Menu -->
         <nav class="mt-2">
-          <ul th:replace="Layout/MenusLaterales/Personal :: personal" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
+          <ul th:replace="Layout/MenusLaterales/MenuIzquierda :: ${personalLogeado.gTipoPersonal().nombre}" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
             role="menu" data-accordion="false" >
  
   

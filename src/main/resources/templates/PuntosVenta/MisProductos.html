@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      	
+        <div class="content-wrapper">
+            <section class="content">
+                
+                
+                
+                <div th:replace="Layout/Mensaje"></div>
+	             <div class="row">
+                    <div class="col text-center">
+                        <h2>
+                            Productos del punto: 
+                            <span th:text="${punto.nombre}">
+
+                            </span>
+                        </h2>
+                    </div>
+
+                 </div>
+
+                <table class="m-3 table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                cod Producto
+                            </th>
+                            <th>
+                                Categoría
+                            </th>
+                            <th>
+                                Producto
+                            </th>
+                            <th>
+                                Stock Total
+                            </th>
+                            
+
+                        </tr>
+                    </thead>    
+                    <tbody>
+                        <tr th:each="producto : ${listaProductos}"    >
+                            <td  th:text="${producto.codigoLegible}">
+                             
+                            </td>
+                            <td th:text="${producto.gCategoria().nombre}">
+                             
+                            </td>
+                            <td th:text="${producto.nombre}">
+                             
+                            </td>
+                            <td th:text="${producto.stockEnPunto(punto.codPunto)}">
+                             
+                            </td>
+                        </tr>
+
+                    </tbody>
+                    
+                </table>
+                
+
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <style>
+        .rojo{
+            background-color: rgba(211, 136, 136, 0.445);
+        }
+
+    </style>
+</body>
+<script th:replace = "Layout/ValidatorJS :: validatorJS"></script>
+ 
+</html>

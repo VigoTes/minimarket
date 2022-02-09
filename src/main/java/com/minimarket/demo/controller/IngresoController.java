@@ -95,8 +95,9 @@ public class IngresoController {
 		PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
 
 		model.addAttribute("listaProductos",listaProductos);
+		model.addAttribute("supervisor",ManejadorSesion.getPersonalLogeado(session));
 		model.addAttribute("listaProveedores",listaProveedores);
-		model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
+		//model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
 		model.addAttribute("puntoVenta",puntoVenta);
 		
 
@@ -108,8 +109,8 @@ public class IngresoController {
 	}
 	
 	@GetMapping("/Guardar")
-	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request
-		                        ,String json_detalles,  String codPersonal, String puntoVenta_codigo,  String comentario) throws Exception {
+	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request, HttpSession session
+		                        ,String json_detalles,  String puntoVenta_codigo,  String comentario) throws Exception {
                                     
 		
             Debug.print(json_detalles);
@@ -118,7 +119,7 @@ public class IngresoController {
         
             IngresoAlmacen ingreso = new IngresoAlmacen();
 			ingreso.fechaHoraIngreso = LocalDateTime.now();
-            ingreso.codPersonalQueIngreso = Integer.valueOf(codPersonal);
+			ingreso.codPersonalQueIngreso = ManejadorSesion.getPersonalLogeado(session).codPersonal;
 			ingreso.comentario = comentario;
 			ingreso.costoTotal = 0;
             ingreso.guardar();
@@ -184,9 +185,10 @@ public class IngresoController {
 
 		//PuntoVenta puntoVenta = Personal.findOrFail("1").obtenerPuntoVenta();//colocar aqui el pk del personal logueado
 
+		model.addAttribute("supervisor",ManejadorSesion.getPersonalLogeado(sessionl));
 		model.addAttribute("listaProductos",listaProductos);
 		model.addAttribute("listaProveedores",listaProveedores);
-		model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
+		//model.addAttribute("listaPersonal",Personal.obtenerPersonalPorTipo("Supervisor"));
 		model.addAttribute("ingresoAlmacen",ingresoAlmacen);
 		model.addAttribute("puntoVenta",ingresoAlmacen.obtenerPuntoVenta());
 		
@@ -202,7 +204,7 @@ public class IngresoController {
 
 	@GetMapping("/Actualizar")
 	public ModelAndView  Actualizar(ModelMap  model , HttpServletRequest request
-		                        ,String json_detalles,  String codPersonal, String puntoVenta_codigo,  String comentario,  String codIngresoAlmacen) throws Exception {
+		                        ,String json_detalles,  String puntoVenta_codigo,  String comentario,  String codIngresoAlmacen) throws Exception {
                                     
 		
             Debug.print(json_detalles);
@@ -211,7 +213,7 @@ public class IngresoController {
         
             IngresoAlmacen ingreso = IngresoAlmacen.findOrFail(codIngresoAlmacen);
 			//ingreso.fechaHoraIngreso = LocalDateTime.now();
-            ingreso.codPersonalQueIngreso = Integer.valueOf(codPersonal);
+            //ingreso.codPersonalQueIngreso = Integer.valueOf(codPersonal);
 			ingreso.comentario = comentario;
 			ingreso.costoTotal = 0;
             ingreso.guardar();
@@ -296,4 +298,23 @@ public class IngresoController {
 		 
 		return "Ingresos/ver";
 	}
+
+
+
+
+
+	@GetMapping("/ListarLotes")
+	public String ListarLotes(Model model, HttpSession session) throws Exception {
+		 
+		Database db = new Database();
+		List<Lote> listaLotes = db.orderBy("codLote DESC") .results(Lote.class);
+		db.close();
+	 
+		model.addAttribute("listaLotes",listaLotes);
+		 
+		return "Ingresos/ListarLotes";
+	}
+
+
+
 }

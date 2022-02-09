@@ -55,6 +55,12 @@
 
 							<span id='valida' class='i i-close'></span>
 						</p>    
+                        
+                        <!-- MENSAJE DE ERROR DE LLEGADA  -->
+                        <div th:if="${msj}!=null" class ="m-3" role ="alert">
+                            <span th:text="${msj}"></span>
+                        </div>
+
 						<input   name="ingresar" id='ingresar' value='Ingresar' type="submit"/>
 						
 					</div>

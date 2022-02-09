@@ -43,7 +43,7 @@ public class DetalleVenta extends ModeloGuardable{
 		super();
 	}
  
-	 
+	DecimalFormat formato = new DecimalFormat("S/ #,###.00");
 	// ESTE CÓDIGO ES FIJO, SOLO SE CAMBIA EL NOMBRE DE LA CLASE EN 3 LUGARES
 	public static DetalleVenta findOrFail(String id) throws Exception {
 		Database db = new Database();
@@ -72,12 +72,10 @@ public class DetalleVenta extends ModeloGuardable{
 	
 
 	public String obtenerPrecioUnitarioFormateado() throws Exception{
-		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
 		return formato.format(this.precioUnitario);
 	}
 
 	public String obtenerTotalFormateado() throws Exception{
-		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
 		return formato.format(this.total);
 	}
 	

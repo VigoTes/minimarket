@@ -1,0 +1,219 @@
+
+
+<!-- MENÚ DEL ADMINISTRADOR DEL SISTEMA -->
+<ul th:fragment="AdminSistema" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
+role="menu" data-accordion="false" >
+
+    <li class="nav-item">
+        <a href="/Ventas/Listar" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Ventas
+            </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/IngresoAlmacen/Listar" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Almacen
+            </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/Ventas/Clientes" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Clientes
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/IngresoAlmacen/ListarLotes" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Lotes de Prod
+            </p>
+        </a>
+    </li>
+
+    
+
+    <li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="far fa-building nav-icon"></i>
+        <p>
+        Mantenedores
+        <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="/Personal/Listar" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Empleado</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/Proveedores/Listar" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Proveedor</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a th:href="@{/Productos/Listar}" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Producto</p>
+            </a>
+        </li>
+ 
+
+    
+        <li class="nav-item">
+            <a href="/PuntosVenta/Listar" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Punto de venta</p>
+            </a>
+        </li>
+    </ul>
+    </li>
+
+</ul>
+
+
+
+
+
+
+
+<!-- MENU DEL ADMINISTRADOR -->
+<ul th:fragment="Administrador" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
+    role="menu" data-accordion="false" >
+
+    <li class="nav-item">
+        <a href="/Ventas/Listar" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Ventas Totales
+            </p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/PuntosVenta/Listar" class="nav-link">
+            <i class="far fa-address-card nav-icon"></i>
+            <p>Punto de venta</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/IngresoAlmacen/Listar" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Almacen
+            </p>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a href="/Ventas/Clientes" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Clientes
+            </p>
+        </a>
+    </li>
+
+    
+
+    <li class="nav-item has-treeview">
+    <a href="#" class="nav-link">
+        <i class="far fa-building nav-icon"></i>
+        <p>
+        Mantenedores
+        <i class="right fas fa-angle-left"></i>
+        </p>
+    </a>
+    <ul class="nav nav-treeview">
+        <li class="nav-item">
+            <a href="/Personal/Listar" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Personal</p>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a href="/Proveedores/Listar" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Proveedor</p>
+            </a>
+        </li>
+
+
+        <li class="nav-item">
+            <a th:href="@{/Productos/Listar}" class="nav-link">
+                <i class="far fa-address-card nav-icon"></i>
+                <p>Producto</p>
+            </a>
+        </li>
+
+
+      
+    
+
+
+
+    </ul>
+    </li>
+
+</ul>
+
+
+
+<!-- MENU DEL Supervisor -->
+<ul th:fragment="Supervisor" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
+    role="menu" data-accordion="false" >
+
+    <li class="nav-item">
+        <a href="/IngresoAlmacen/Listar" class="nav-link">
+            <i class="far fa-building nav-icon"></i>
+            <p>
+            Almacen
+            </p>
+        </a>
+    </li>
+
+
+
+    
+
+
+</ul>
+
+
+
+
+
+
+
+<!-- MENU DEL CAJERO -->
+<ul th:fragment="Cajero" class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" 
+    role="menu" data-accordion="false" >
+
+    <li class="nav-item">
+        <a href="/PuntosVenta/ListarVentasDePuntoActual" class="nav-link">
+            <i class="far fa-address-card nav-icon"></i>
+            <p>Mis Ventas</p>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="/PuntosVenta/ListarProductosDePuntoActual" class="nav-link">
+            <i class="far fa-address-card nav-icon"></i>
+            <p>Mis Productos</p>
+        </a>
+    </li>
+    
+</ul>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html 
+xmlns:th="http://www.thymeleaf.org"
+>
+<head th:replace="index :: headGeneral">
+</head>
+<body class="hold-transition sidebar-mini">
+    <div class="wrapper">
+        <nav th:replace="index :: navGeneral"></nav>
+        <aside th:replace="index :: asideGeneral"></aside>
+      
+        <div class="content-wrapper">
+            <section class="content"> <!--contenido-->
+                <div style="text-align: center">
+                    <h2>Listar lotes de productos</h2>
+                    <br>
+                    
+                    <div th:replace="Layout/Mensaje"></div>
+                    <table class="table table-sm" style="font-size: 10pt; margin-top:10px;">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Punto</th>
+                                <th style="text-align: center">Ingresado el</th>
+                                <th>Stock actual</th>
+                               
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="lote : ${listaLotes}">
+                                <td th:text="${lote.codigoLegible}" style = "padding: 0.40rem"></td>
+                                <td th:text="${lote.obtenerProducto().nombre}" style = "padding: 0.40rem; text-align: center"></td>
+                                <td th:text="${lote.gPunto().nombre}" style = "padding: 0.40rem; text-align: center"></td>
+                                <td th:text="${lote.gIngreso().obtenerFechaHoraIngresoFormateada()}" style = "padding: 0.40rem; text-align: center"></td>
+                                <td th:text="${lote.stock}" style = "padding: 0.40rem"></td>
+                              
+                            </tr>
+
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+       
+        <footer th:replace="index :: footerGeneral"></footer>
+    </div>
+    <th:block  th:replace="index :: scriptGeneral"></th:block>
+
+    <script type="application/javascript">
+        /*
+        $(document).ready(function(){
+            var now = new Date();
+
+
+
+            var day = ("0" + now.getDate()).slice(-2);
+            var month = ("0" + (now.getMonth() + 1)).slice(-2);
+
+            var today = (day)+"/"+(month)+"/"+now.getFullYear();
+            $("#fechaInicio").val(today);
+            $("#fechaFin").val(today);
+        });
+        */
+    </script>
+</body>
+</html>

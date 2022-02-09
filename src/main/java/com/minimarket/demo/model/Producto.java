@@ -84,4 +84,21 @@ public class Producto extends ModeloGuardable{
     	
     	return "a";
     }
+
+    public String stockEnPunto(int codPunto){
+
+        Database db = new Database();
+		List<Lote> resultados = 
+				db.where("codProducto=? and codPunto=?", this.codProducto,codPunto).results(Lote.class);
+        db.close();
+        int sum = 0;
+        for (Lote lote : resultados) {
+            sum+=lote.stock;
+
+
+        }
+        
+        return "["+String.valueOf(sum) + "]   ";
+
+    }
 }

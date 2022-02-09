@@ -49,12 +49,9 @@ xmlns:th="http://www.thymeleaf.org"
                                             <label for="fecha">Responsable:</label>
                                         </div>
                                         <div class="col">
-                                            
-                                            <select class="form-control " name="codPersonal" id="codPersonal" >
-                                                <option value="-1">- Responsable -</option>
-                                                <option  th:each="personal : ${listaPersonal}" th:value="${personal.codPersonal}" th:text="${personal.obtenerNombreCompleto()}" th:selected="${personal.codPersonal==ingresoAlmacen.codPersonalQueIngreso}" >
-                                                </option>
-                                            </select>      
+                                            <div>
+                                                <input type="text" style="margin:0px auth;" class="form-control" name="nombrePersonal" id="nombrePersonal" th:value="${supervisor.obtenerNombreCompleto}" disabled >     
+                                            </div>   
                                         </div>
                                     </div>
                                 </div>
@@ -279,9 +276,8 @@ xmlns:th="http://www.thymeleaf.org"
     
             function validarFormularioCrear(){
                 msj='';
-                limpiarEstilos(['codPersonal','comentario']);
-    
-                msj = validarSelect(msj,'codPersonal',-1,'Responsable');
+                limpiarEstilos(['comentario']);
+
     
                 msj = validarTamañoMaximoYNulidad(msj,'comentario',200,'Comentario');
     

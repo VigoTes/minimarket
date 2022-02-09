@@ -23,8 +23,10 @@ import com.minimarket.demo.model.Categoria;
  
 import com.minimarket.demo.model.ModeloGuardable;
 import com.minimarket.demo.model.Personal;
+import com.minimarket.demo.model.Producto;
 import com.minimarket.demo.model.PuntoVenta;
 import com.minimarket.demo.model.TipoPersonal;
+import com.minimarket.demo.model.Venta;
 
 import librerias.Debug;
 import librerias.ManejadorSesion;
@@ -34,6 +36,56 @@ import librerias.ManejadorSesion;
 public class PuntoVentaController {
 
 
+
+    
+    //Vista principal del cajero
+	@GetMapping("/ListarVentasDePuntoActual")
+	public ModelAndView ListarVentasDePuntoActual(Model model, HttpSession session)  throws Exception{
+		
+        Personal personal = ManejadorSesion.getPersonalLogeado(session);
+
+        PuntoVenta punto = personal.obtenerPuntoVenta();
+        Debug.print("el personal es + " +  personal.gNombreCompleto() +" / "+ punto.nombre + " /punto.cajero= " + punto.gCajero().gNombreCompleto() );
+        
+		Database db = new Database();
+		List<Venta> listaVentas = db.orderBy("codVenta DESC").where("codPunto=?",punto.codPunto).results(Venta.class);
+		model.addAttribute("listaVentas",listaVentas);
+        model.addAttribute("punto",punto);
+        
+        
+		
+		db.close();
+		
+		model.addAttribute("msj",ManejadorSesion.getMsj(session));
+		return new ModelAndView("PuntosVenta/VerPuntoVenta");
+	}
+        
+
+    //Vista principal del cajero
+	@GetMapping("/ListarProductosDePuntoActual")
+	public ModelAndView ListarProductosDePuntoActual(Model model, HttpSession session)  throws Exception{
+		
+        Personal personal = ManejadorSesion.getPersonalLogeado(session);
+        PuntoVenta punto = personal.obtenerPuntoVenta();
+
+        
+		Database db = new Database();
+        String sqlB = "SELECT producto.* from producto "
+                + " inner join lote on lote.codProducto = producto.codProducto "
+                + " where codPunto = ?"
+                + " group by producto.codProducto "
+                + " having sum(stock)>0";
+        List<Producto> listaProductos = db.sql(sqlB, punto.codPunto ) .results(Producto.class);
+
+		model.addAttribute("listaProductos",listaProductos);
+		model.addAttribute("punto",punto);
+		
+        db.close();
+		
+		model.addAttribute("msj",ManejadorSesion.getMsj(session));
+		return new ModelAndView("PuntosVenta/MisProductos");
+	}
+    
 
 	@GetMapping("/Listar")
 	public String Listar(Model model, HttpSession session) {

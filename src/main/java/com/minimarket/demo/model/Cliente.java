@@ -71,5 +71,12 @@ public class Cliente extends ModeloGuardable{
 	public TipoCliente gTipoCliente() throws Exception{
         return TipoCliente.findOrFail(String.valueOf(this.codTipoCliente));
     }
+
+	public boolean esNatural() throws Exception{
+		if(this.gTipoCliente().nombre.equals("Persona Natural")){
+			return true;
+		}
+		return false;
+	}
 	
 }

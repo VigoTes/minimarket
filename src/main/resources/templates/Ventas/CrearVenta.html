@@ -88,7 +88,7 @@
                                                     <!-- select2 select2-hidden-accessible selectpicker -->
                                                         <select class="form-control " onchange="cambioProducto()" name="codProducto" id="codProducto" >
                                                             <option value="-1">- Producto -</option>
-                                                            <option  th:each="producto : ${listaProductos}" th:value="${producto.codProducto}" th:text="${producto.nombre}">
+                                                            <option  th:each="producto : ${listaProductos}" th:value="${producto.codProducto}" th:text="${  producto.stockEnPunto(punto.codPunto) + producto.nombre }">
                                                             </option>
                             
                                                         </select>
@@ -171,7 +171,7 @@
                         <div class="row m-4">
     
                             <div class="col text-left">
-                                <a class="btn btn-primary" href="/Ventas/Listar">
+                                <a class="btn btn-primary" href="/PuntosVenta/ListarVentasDePuntoActual">
                                     
                                     <i class="fas fa-backward"></i>
                                     Menú principal
@@ -209,7 +209,7 @@
     var listaProductos = [(${json_listaProductos})];
 
     var listaClientes = [(${json_listaClientes})];
-
+    var listaLotesPunto = [(${json_listaLotesPunto})];
     
     var listaDetalles = [];
 
@@ -510,7 +510,12 @@
         
         msjError= validarPositividadYNulidad(msjError,'cantidad','Cantidad');
         msjError= validarSelect(msjError,'codProducto','-1','Producto');
-    
+        //VALIDAMOS STOCK
+        listaLotes = listaLotesPunto.filter(element => element.codProducto == productoSeleccionado.codProducto);
+        loteEncontrado = listaLotes[0];
+        if(loteEncontrado.stock < document.getElementById('cantidad').value)
+            msjError = "No hay suficiente stock de este producto. Solamente hay " + loteEncontrado.stock + " unidades.";   
+
         if(msjError!=""){
             alerta(msjError);
             return false;

@@ -10,26 +10,53 @@
         <div class="content-wrapper">
             <section class="content">
                 
-                
-                
                 <div th:replace="Layout/Mensaje"></div>
-	            <div class="row">
-                    <div class="col text-center">
-                        <h2>
-                            Ventas totales de la empresa
-                        </h2>
+                <div class="row" >
+                    <div class="col  text-center">
+                        <h1>Ver mi punto de venta</h1>
                     </div>
+                    
+                   
                 </div>
-               
+                <div class="row m-1">
+                    <div class="col">
+                        <label for="">Punto:</label>
+                        <input type="text" class="form-control" th:value="${punto.nombre}" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="">Dirección:</label>
+                        <input type="text" class="form-control" th:value="${punto.direccion}" readonly>
+                    </div>
+                    <div class="col">
+                        <label for="">Cajero:</label>
+                        <input type="text" class="form-control" th:value="${punto.gCajero().gNombreCompleto()}" readonly>
+                    </div>
+
+                </div>
+                <div class="row m-1">
+
+                    <div class="col">
+                        <a class="btn btn-primary" href="/Ventas/Crear">
+                            <i class="fas fa-plus"></i>
+                            Nueva Venta
+                        </a>
+                    </div>
+                    
+                    <div class="col text-right">
+                        <button type="button" class="btn btn-success btn-xs" onclick="enviarReporteDiario()">
+                            Enviar reporte diario
+                        </button>
+                    </div>
+
+                   
+                    
+                </div>
 
                 <table class="m-3 table table-sm table-hover">
                     <thead>
                         <tr>
                             <th>
                                 Código
-                            </th>
-                            <th>
-                                Punto de Venta
                             </th>
                             <th>
                                 Cliente
@@ -63,10 +90,6 @@
                             <td  th:text="${venta.codigoLegible}">
                              
                             </td>
-                            <td  th:text="${venta.obtenerPuntoVenta().nombre}">
-                             
-                            </td>
-                            
                             <td th:text="${venta.gClienteDescripcion()}">
                              
                             </td>
@@ -121,4 +144,22 @@
 
     </style>
 </body>
+<script>
+
+    function enviarReporteDiario(){
+
+        $.get('/Ventas/EnviarReporteDiario/',
+            function(data)
+            {
+                obj = JSON.parse(data);
+                console.log(obj);
+                if(obj.ok)
+                    alertaExitosa("Enhorabuena","Se envió exitosamente el reporte diario");
+
+            });
+
+    }
+
+</script>
+
 </html>

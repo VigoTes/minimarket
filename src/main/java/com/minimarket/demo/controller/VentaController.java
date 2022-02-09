@@ -2,6 +2,7 @@ package com.minimarket.demo.controller;
 
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,11 @@ import com.minimarket.demo.model.Categoria;
 import com.minimarket.demo.model.Cliente;
 import com.minimarket.demo.model.DetalleVenta;
 import com.minimarket.demo.model.EstadoProducto;
+import com.minimarket.demo.model.Lote;
 import com.minimarket.demo.model.ModeloGuardable;
+import com.minimarket.demo.model.Personal;
 import com.minimarket.demo.model.Producto;
+import com.minimarket.demo.model.PuntoVenta;
 import com.minimarket.demo.model.Venta;
 
 import librerias.Debug;
@@ -55,8 +59,10 @@ public class VentaController {
 
 
 	@GetMapping("/Listar")
-	public ModelAndView Listar(Model model, HttpSession session) {
+	public ModelAndView Listar(Model model, HttpSession session)  throws Exception{
 		
+        
+
 		Database db = new Database();
 		List<Venta> listaVentas = db.orderBy("codigoLegible DESC").results(Venta.class);
 		model.addAttribute("listaVentas",listaVentas);
@@ -67,23 +73,43 @@ public class VentaController {
 		return new ModelAndView("Ventas/ListarVentas");
 	}
 
+    
 
+
+
+    
 	
 	@GetMapping("/Crear")
-	public ModelAndView Crear(ModelMap model, HttpSession session) throws JsonProcessingException {
+	public ModelAndView Crear(ModelMap model, HttpSession session) throws Exception {
 		
+        Personal cajero = ManejadorSesion.getPersonalLogeado(session);
+        PuntoVenta punto = cajero.obtenerPuntoVenta();
+
 		Database db = new Database();
-		List<Producto> listaProductos = db.results(Producto.class);
+
+        //Productos que tienen stock en este punto de venta
+        String sqlB = "SELECT producto.* from producto "
+                            + " inner join lote on lote.codProducto = producto.codProducto "
+                            + " where codPunto = ?"
+                            + " group by producto.codProducto "
+                            + " having sum(stock)>0";
+		List<Producto> listaProductos = db.sql(sqlB, punto.codPunto ) .results(Producto.class);
+
         List<Cliente> listaClientes = db.results(Cliente.class);
-        
+        List<Lote> listaLotesPunto = db.where("codPunto=?",punto.codPunto).results(Lote.class);
+
 		model.addAttribute("listaProductos",listaProductos);
 		model.addAttribute("listaClientes",listaProductos);
+        model.addAttribute("punto",punto);
+        
 		
 		db.close();
 		
         
         model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
         model.addAttribute("json_listaClientes",JSONER.toJson(listaClientes));
+        model.addAttribute("json_listaLotesPunto",JSONER.toJson(listaLotesPunto));
+        
         
         return new ModelAndView("Ventas/CrearVenta");
 		 
@@ -94,10 +120,12 @@ public class VentaController {
 	 
     // ME QUEDÉ AQUI TRATANDO DE ITERAR ESTE OBJETO JSON 
 	@GetMapping("/Guardar")
-	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request, String dni , String nombres,String apellidos
+	public ModelAndView  Guardar(ModelMap  model , HttpServletRequest request, String dni , String nombres,String apellidos, HttpSession session
             ,String ruc , String razonSocial,int codTipoCDP, int codTipoCliente ,String json_detalles,  String codCliente) throws Exception {
                                     
-            
+            Personal cajero = ManejadorSesion.getPersonalLogeado(session);
+
+
             Cliente cliente;
             //Si no llegó un dato cliente, creamos uno nuevo
             if(codCliente.equals("0")){
@@ -123,8 +151,8 @@ public class VentaController {
             JSONArray array = new JSONArray(json_detalles);
         
             Venta venta = new Venta();
-            venta.codPunto = 1;
-            venta.codPersonal = 1;
+            venta.codPunto = cajero.obtenerPuntoVenta().codPunto;
+            venta.codPersonal = cajero.codPersonal;
             venta.importeBruto = 0;
             venta.importeTotal = 0;
             venta.igv = 0;
@@ -157,9 +185,16 @@ public class VentaController {
             	 
             	 detalle.precioUnitario = producto.precioActual;
             	 detalle.total = producto.precioActual * cantidad;
-            	 detalle.guardar();
+            	 detalle.guardar();  
                  
             	 total += detalle.total;
+            
+                 
+                 //Ahora restamos el stock del lote correspondiente
+                 Lote loteARestar = Lote.getLoteAVender(codProducto, venta.codPunto);
+                 loteARestar.stock = loteARestar.stock - cantidad;
+                 loteARestar.guardar();
+
             }
             
             venta.importeTotal = total;
@@ -168,8 +203,9 @@ public class VentaController {
             venta.guardar();
            
 
+            
             ManejadorSesion.addMsj(request, "Venta registrada exitosamente.");
-            return new ModelAndView ("redirect:/Ventas/Listar", model);
+            return new ModelAndView ("redirect:/PuntosVenta/ListarVentasDePuntoActual", model);
 	}
 
 
@@ -222,4 +258,38 @@ public class VentaController {
 	}
     
     
+
+
+    @GetMapping("/EnviarReporteDiario")
+    @ResponseBody //para retornar no una vista sino contenido
+	public String EnviarReporteDiario( HttpSession session ) throws Exception {
+
+
+        DateTimeFormatter formatterVista = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatterSQL = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        
+        Personal personal = ManejadorSesion.getPersonalLogeado(session);
+        PuntoVenta punto = personal.obtenerPuntoVenta();
+
+        String msj = "";
+
+        Database db = new Database();
+        List<Venta> listaVentas = db.where("codPunto=? and date(fechaHora)=?", punto.codPunto,  LocalDateTime.now().format(formatterSQL) ).results(Venta.class);
+
+        float sum = 0;
+        for (Venta venta : listaVentas) {
+            sum+= venta.importeTotal;
+        }
+
+        db.close();
+
+        String totalVendido = String.valueOf(sum);
+
+        msj = "Reporte diario. El día " +  LocalDateTime.now().format(formatterVista) + " se vendió un total de " 
+        + totalVendido + " en el punto de venta " + punto.nombre;
+        
+        return MaracsoftBot.enviarMensaje(msj);
+	}
+    
+
 }

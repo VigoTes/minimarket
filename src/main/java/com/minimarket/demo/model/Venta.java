@@ -3,6 +3,7 @@ package com.minimarket.demo.model;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class Venta extends ModeloGuardable{
 		super();
 	}
  
-	 
+	DecimalFormat formato = new DecimalFormat("S/ #,###.00");
 	// ESTE CÓDIGO ES FIJO, SOLO SE CAMBIA EL NOMBRE DE LA CLASE EN 3 LUGARES
 	public static Venta findOrFail(String id) throws Exception {
 		Database db = new Database();
@@ -117,6 +118,10 @@ public class Venta extends ModeloGuardable{
 		
 		return resultados.get(0);
 	}
+
+	public PuntoVenta obtenerPuntoVenta() throws Exception{
+		return PuntoVenta.findOrFail(String.valueOf(this.codPunto));
+	}
 	  
 
     public Cliente gCliente() throws Exception{
@@ -138,12 +143,20 @@ public class Venta extends ModeloGuardable{
 
     }
 
+	public String obtenerImporteBrutoFormateado() throws Exception{
+		return formato.format(this.importeBruto);
+	}
+	public String obtenerIgvFormateado() throws Exception{
+		return formato.format(this.igv);
+	}
 	public String obtenerImporteTotalFormateado() throws Exception{
-		DecimalFormat formato = new DecimalFormat("S/'.' #,###.###");
-
 		return formato.format(this.importeTotal);
 	}
 
+	public String descripcionCDP() throws Exception{
+		String text = this.gTipoCDP().nombre+" Nº: "+this.codigoLegible;
+		return text.toUpperCase();
+	}
 	
 
 }
