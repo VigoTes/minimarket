@@ -4,6 +4,7 @@ package com.minimarket.demo.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -17,6 +18,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
@@ -43,6 +45,7 @@ import com.minimarket.demo.model.Venta;
 import librerias.Debug;
 import librerias.JSONER;
 import librerias.ManejadorSesion;
+import librerias.MaracsoftBot;
 
 @Controller
 @RequestMapping("Ventas")
@@ -168,6 +171,40 @@ public class VentaController {
             ManejadorSesion.addMsj(request, "Venta registrada exitosamente.");
             return new ModelAndView ("redirect:/Ventas/Listar", model);
 	}
+
+
+    @GetMapping("/Ver/{codVenta}")
+	public String verIngreso(Model model, HttpSession sessionl, @PathVariable("codVenta") String codVenta) throws Exception {
+        Venta venta = Venta.findOrFail(codVenta);
+
+
+		model.addAttribute("venta",venta);
+		model.addAttribute("tipoCDP",venta.obtenerTipoCDP());
+		model.addAttribute("cliente",venta.obtenerCliente());
+		model.addAttribute("detalles",venta.obtenerDetalles());
+		
+
+        //model.addAttribute("json_listaProductos",JSONER.toJson(listaProductos));
+		//model.addAttribute("json_listaProveedores",JSONER.toJson(listaProveedores));
+		
+		//model.addAttribute("json_listaPersonal",JSONER.toJson(listaPersonal));
+
+        model.addAttribute("json_cliente",JSONER.toJson(venta.obtenerCliente()));
+		 
+		return "Ventas/VerVenta";
+	}
+    
+
+
+
+    @GetMapping("/ConsultarPorDNI/{dni}")
+    @ResponseBody //para retornar no una vista sino contenido
+	public String ConsultarPorDNI(@PathVariable("dni") String dni) throws Exception {
+        
+        
+        return  MaracsoftBot.ConsultarAPISunatDNI(dni);
+	}
+    
 
 
     

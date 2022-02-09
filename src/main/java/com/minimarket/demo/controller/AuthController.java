@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.dieselpoint.norm.Database;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import librerias.Debug;
 import librerias.JSONER;
 import librerias.ManejadorSesion;
+import librerias.MaracsoftBot;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -30,7 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.ui.ModelMap;
-
+import org.hibernate.mapping.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -129,11 +132,11 @@ public class AuthController {
 
     @GetMapping("/probandoCosas")
     public String probandoCosas(Model model, HttpSession session) throws Exception{
+            
+        String info = MaracsoftBot.ConsultarAPISunatDNI("71208489");
+        //String info = "DIEGO VIGO";
+        model.addAttribute("var", info);
         
-        IngresoAlmacen i = IngresoAlmacen.findOrFail("2");
-
-        model.addAttribute("var",i.obtenerCostoTotalFormateado());
-
         return "prueba";
     }
 
